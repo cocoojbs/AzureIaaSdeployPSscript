@@ -1,7 +1,7 @@
 function Confirmation {
     param($command)
     $title = " Confirm (y/n)"
-    $message = " Are you sure you want to create a new Azure resource with this parameter ? "
+    $message = " Are you sure you want to deploy new Azure resource with this parameter ? "
     $tChoiceDescription = "System.Management.Automation.Host.ChoiceDescription"
     
     $options = @(
