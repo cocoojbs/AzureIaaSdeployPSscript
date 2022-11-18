@@ -1,0 +1,2 @@
+﻿storageName,storageResourceGroup,location,sku,bootdiag_vmNames,vmResourceGroups,flowlog_nsgs,nsgResourceGroups,RetentionInDays
+,,,,hpckc001;hpckc002,hpc-krg01;hpc-krg01,,,

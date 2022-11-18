@@ -1,0 +1,2 @@
+vm_name,vm_resourceGroup,vm_size,vmOsDisk_type,vmOsDisk_size,vmDataDisks_type,vmDataDisks_size,adminId,adminPass,ImageName,ImageResourceGroup,AvailabilitySet,ProximityPlacementGroup
+HPTHC000,hpt-rg01,Standard_F2s_v2,Standard_LRS,64,,,azureadmin,!QAZ2wsx3edc,hpckc004-image,hpc-krg01,,

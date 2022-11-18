@@ -1,0 +1,5 @@
+﻿vm_name,vm_resourceGroup,ipAddress,vNet_name,vNet_resourceGroup,location,range,subnetNames,subnetRanges,NSG_names,NSG_resourceGroups
+HPTHC000,hpt-rg01,172.16.7.100,vnet01,msa-nwrg01,japaneast,172.16.0.0/16,subnet07;subnet08;subnet09,172.16.7.0/24;172.16.8.0/24;172.16.9.0/24,HPTNSG07;HPTNSG08;HPTNSG09,hpt-rg01;hpt-rg01;hpt-rg01
+HPTHC001,hpt-rg01,172.16.7.100,vnet01,msa-nwrg01,japaneast,172.16.0.0/16,subnet07;subnet08;subnet09,172.16.7.0/24;172.16.8.0/24;172.16.9.0/24,HPTNSG07;HPTNSG08;HPTNSG09,hpt-rg01;hpt-rg01;hpt-rg01
+HPTHC002,hpt-rg01,172.16.7.101,vnet01,msa-nwrg01,japaneast,172.16.0.0/16,subnet07;subnet08;subnet09,172.16.7.0/24;172.16.8.0/24;172.16.9.0/24,HPTNSG07;HPTNSG08;HPTNSG09,hpt-rg01;hpt-rg01;hpt-rg01
+HPTHC003,hpt-rg01,172.16.7.102,vnet01,msa-nwrg01,japaneast,172.16.0.0/16,subnet07;subnet08;subnet09,172.16.7.0/24;172.16.8.0/24;172.16.9.0/24,HPTNSG07;HPTNSG08;HPTNSG09,hpt-rg01;hpt-rg01;hpt-rg01
