@@ -11,10 +11,10 @@ function add_VM {
         $vmSize = $line.vm_size
         $adminUsername = $line.AdminId
         $adminPassword = $line.AdminPass
-        $osDiskName = $line.vm_name + "_osDisk"
+        $osDiskName = $line.vm_name + "_OsDisk"
         $osDiskSize = $line.vmOsDisk_size
         $osDiskType = $line.vmOsDisk_type
-        $dataDiskName = $line.vm_name + "_dataDisk"
+        $dataDiskName = $line.vm_name + "_DataDisk"
         $dataDiskSizeArray = $line.vmDataDisks_size.Split(";")
         $dataDiskTypeArray = $line.vmDataDisks_type.Split(";")
         $imageName = $line.ImageName
@@ -80,7 +80,7 @@ function add_VM {
                     [int]$os_num=Read-Host "| Select OS version ##_number"
                     $os = (Get-Content $list_file)[$os_num] 
                     if (!($os) -Or $os_num -eq 0) {
-                        Write-Host -Object "[ERROR] Invalid OS version." -ForegroundColor "Red"; "|"; break
+                        Write-Host -Object "| -- Error -- Invalid OS version." -ForegroundColor "Red"; "|"; break
                     }
                 }
                 $osType = $os | %{ $_.Split(",")[1]}
@@ -112,7 +112,7 @@ function add_VM {
                 $nic = Get-AzNetworkInterface -Name "${vmName}-NIC1" -ResourceGroupName $resourceGroup
                 $image = Get-AzVMImage -PublisherName $publisherName -Offer $offer -Skus $sku -Location $nic.Location
                 if (!($image)) {
-                    Write-Host -Object "[ERROR]  SKU [ $sku ] not found in Azure Marketplace." -ForegroundColor "Red"
+                    Write-Host -Object "| -- Error --  SKU [ $sku ] not found in Azure Marketplace." -ForegroundColor "Red"
                     break ; Write-Host -Object "|"
                 }
                 $vmConfig = Set-AzVMSourceImage -PublisherName $publisherName -Offer $offer -Skus $sku -Version "latest" -VM $vmConfig
@@ -121,7 +121,7 @@ function add_VM {
                 # Custom VM image select
                 $image = Get-AzImage -ImageName $imageName -ResourceGroup $imageResourceGroup
                 if (!($image)) {
-                    Write-Host -Object "[ERROR] IMAGE [ ${imageName} ] not found in [ ${imageResourceGroup} ]." -ForegroundColor "Red"
+                    Write-Host -Object "| -- Error -- IMAGE [ ${imageName} ] not found in [ ${imageResourceGroup} ]." -ForegroundColor "Red"
                     break ; Write-Host -Object "|"
                 }
                 Write-Host -Object "| VM_IMAGE ResourceID: "
@@ -157,7 +157,7 @@ function add_VM {
                     New-AzVM -ResourceGroup $resourceGroup -Location $location -VM $vmConfig -AsJob | Out-Null   
                 }
                 Default {
-                    Write-Host -Object "[ERROR] Invalid OsType. Select Windows or Linux OsImage." -ForegroundColor "Red"
+                    Write-Host -Object "| -- Error -- Invalid OsType. Select Windows or Linux OsImage." -ForegroundColor "Red"
                     break ; Write-Host -Object "|"
                 }
             }
@@ -165,7 +165,7 @@ function add_VM {
             Write-Host -Object "| VM [ $vmName ] deploying..."
             Get-Job | Wait-Job | Out-Null  
             if (Get-Job -State Failed) {
-                Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                 Get-Job | Remove-Job | Out-Null
                 break ; Write-Host -Object "|"
             }
@@ -174,7 +174,7 @@ function add_VM {
             (Get-AzVM -Name $vmName -resourceGroup $resourceGroup).id
             Write-Host -Object "|"
         }
-        Strat-Sleep 1
+        Start-Sleep 1
     }
     Write-Host -Object "| function add_VM completed."
     Write-Host -Object "|"

@@ -19,7 +19,7 @@ function add_NetworkSecurityRule {
         Write-Host -Object "|"
         $nsg = Get-AzNetworkSecurityGroup -Name $nsg_name -ResourceGroupName $nsg_resourceGroup -ErrorAction SilentlyContinue
         if (!($nsg)) {
-            Write-Host -Object "[ERROR] NSG [ ${nsg_name} ] not found." -ForegroundColor "Red"
+            Write-Host -Object "| -- Error -- NSG [ ${nsg_name} ] not found." -ForegroundColor "Red"
             break ; Write-Host -Object "|"
         }
         $rule = Get-AzNetworkSecurityRuleConfig -Name $rule_name -NetworkSecurityGroup $nsg -ErrorAction SilentlyContinue
@@ -37,7 +37,7 @@ function add_NetworkSecurityRule {
             -Description $description | Set-AzNetworkSecurityGroup -AsJob | Out-Null
             Get-Job | Wait-Job | Out-Null
             if (Get-Job -State Failed) {
-                Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                 Get-Job | Remove-Job | Out-Null
                 break ; Write-Host -Object "|"
             }

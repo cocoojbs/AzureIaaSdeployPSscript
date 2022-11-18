@@ -27,14 +27,14 @@ function add_NetworkInterface {
                 }
                 catch{
                     $subname = $subnetNames[$nic_num]
-                    Write-Host -Object "[ERROR] SUBNET [ ${vnetName}-${subname} ] not found." -ForegroundColor "Red"
+                    Write-Host -Object "| -- Error -- SUBNET [ ${vnetName}-${subname} ] not found." -ForegroundColor "Red"
                     break
                 }
                 $ipConfig = New-AzNetworkInterfaceIpConfig -Name "ipconfig1" -PrivateIpAddressVersion "IPv4" -PrivateIpAddress $privateIpAddresses[$nic_num] -SubnetId $subnet.Id
                 New-AzNetworkInterface -Name "${nicPrefix}-NIC${nicSuffix}" -ResourceGroup $vmResourceGroup -Location $location -IpConfiguration $ipConfig -AsJob -Force | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
-                    Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                    Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                     Get-Job | Remove-Job | Out-Null
                     break
                 }

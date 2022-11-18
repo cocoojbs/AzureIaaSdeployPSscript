@@ -8,7 +8,7 @@ function add_ResourceGroup ($rg_name, $rg_location){
         Write-Host -Object "| RESOURCEGROUP_ID: "
         (Get-AzResourceGroup -Name $rg_name).ResourceId
     } catch {
-        Write-Host " RESOURCEGROUP [ ${rg_name} ] deploy failed." -ForegroundColor "Red"
+        Write-Host "| -- Error -- RESOURCEGROUP [ ${rg_name} ] deploy failed." -ForegroundColor "Red"
     }
     Write-Host -Object "|"
 }

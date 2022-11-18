@@ -23,12 +23,12 @@ function add_AzRecoveryServicesVault {
         if(!($rsc_name)) {
             break
         }
-        Write-Host -Object "| -- Azure_Backup [ $rsc_name ] --"
+        Write-Host -Object "| -- Azure_Backup [ ${rsc_name} ] --"
         Write-Host -Object "|"
 
         $AzVM = Get-AzVM -Name $vm_name -ResourceGroupName $vm_rg -ErrorAction SilentlyContinue
         if(!($AzVM)) {
-            Write-Host -Object "[ERROR] VM [ ${vm_name} ] not found." -ForegroundColor Red
+            Write-Host -Object "| -- Error -- VM [ ${vm_name} ] not found." -ForegroundColor Red
             break ; Write-Host -Object "|"
         }
         add_ResourceGroup $rsc_rg $location
@@ -52,7 +52,7 @@ function add_AzRecoveryServicesVault {
             try {
             $Get_BackupPolicy_Config = Get-Content $AzBackupPolicy_parameter_original -Raw | ConvertFrom-Json
             } catch {
-                Write-Host -Object "[ERROR] : " + $Error[0] -ForegroundColor Red
+                Write-Host -Object "| -- Error -- : " + $Error[0] -ForegroundColor Red
                 break
             }
 
@@ -77,7 +77,7 @@ function add_AzRecoveryServicesVault {
                 $Get_BackupPolicy_Config.parameters.retention.value.weeklySchedule.retentionTimes[0] = $JstTime
                 $Get_BackupPolicy_Config.parameters.retention.value.weeklySchedule.retentionDuration.count = [int]$count
             } else {
-                Write-Host -Object "[ERROR] Invalid ScheduleRunFrequency. Choose [ Daily ] or [ Weekly ]." -ForegroundColor Red
+                Write-Host -Object "| -- Error -- Invalid ScheduleRunFrequency. Choose [ Daily ] or [ Weekly ]." -ForegroundColor Red
                 break ; Write-Host -Object "|"
             }
 
@@ -87,16 +87,15 @@ function add_AzRecoveryServicesVault {
                     [System.Text.RegularExpressions.Regex]::Unescape($_)
                 } | Set-Content $AzBackupPolicy_parameter_edit 
             } catch {
-                Write-Host -Object "[ERROR] : " + $Error[0] -ForegroundColor Red
+                Write-Host -Object "| -- Error -- : " + $Error[0] -ForegroundColor Red
                 break ; Write-Host -Object "|"
             }
-
             try {
                 New-AzResourceGroupDeployment -ResourceGroupName $rsc_rg -TemplateFile $AzBackupPolicy_template -TemplateParameterFile $AzBackupPolicy_parameter_edit
                 Remove-Item $AzBackupPolicy_parameter_edit
                 Write-Host -Object "|"
             } catch {
-                Write-Host -Object "[ERROR] : " + $Error[0] -ForegroundColor Red
+                Write-Host -Object "| -- Error -- : " + $Error[0] -ForegroundColor Red
                 break ; Write-Host -Object "|"
             }
         }
@@ -108,24 +107,25 @@ function add_AzRecoveryServicesVault {
             $vault = Get-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg
             $RSC_Redundancy = Get-AzRecoveryServicesBackupProperties -Vault $vault -ErrorAction SilentlyContinue
         }
-        Write-Host -Object "| Current BackupRedundancy [ " + $RSC_Redundancy.BackupStorageRedundancy + " ]"
+        $Redundancy_type = $RSC_Redundancy.BackupStorageRedundancy
+        Write-Host -Object "| Current BackupRedundancy [ ${Redundancy_type} ]"
         Write-Host -Object "|"
 
         $item = Get-AzRecoveryServicesBackupItem -VaultId $vault.ID -BackupManagementType 'AzureVM' -WorkloadType 'AzureVM'
         if(!($item)) {
             Write-Host -Object "| Changing BackupRedundancy..."
             # Check BackupStorageRedundancy
-            if(!($Redundancy -eq $RSC_Redundancy.BackupStorageRedundancy)) {
+            if(!($Redundancy -eq $Redundancy_type)) {
                 # Set BackupStorageRedundancy
                 try{
                     @(1..5) | %{ Set-AzRecoveryServicesBackupProperty -Vault $vault -BackupStorageRedundancy $Redundancy; (START-SLEEP -m 5000); }
                 } catch {
-                    Write-Host -Object "[ERROR] : " + $Error[0] -ForegroundColor Red
+                    Write-Host -Object "| -- Error -- : " + $Error[0] -ForegroundColor Red
                     break
                 }
                 $vault = Get-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg
-                $RSC_Redundancy = Get-AzRecoveryServicesBackupProperties -Vault $vault
-                Write-Host -Object "| Current BackupRedundancy [ " + $RSC_Redundancy.BackupStorageRedundancy + " ]"
+                $Redundancy_type = (Get-AzRecoveryServicesBackupProperties -Vault $vault).BackupStorageRedundancy
+                Write-Host -Object "| Current BackupRedundancy [ ${Redundancy_type} ]"
             } else {
                 Write-Host -Object "| Changing BackupRedundancy...Skip"
             }
@@ -145,11 +145,11 @@ function add_AzRecoveryServicesVault {
                     Enable-AzRecoveryServicesBackupProtection -Policy $pol -Name $vm_name -ResourceGroupName $vm_rg -VaultId $vault.ID
                     Write-Host -Object "| Enable-AzRecoveryServicesBackupProtection...Success." -ForegroundColor Green  
                 } catch {
-                    Write-Host -Object "[ERROR] : " + $Error[0] -ForegroundColor Red
+                    Write-Host -Object "| -- Error -- : " + $Error[0] -ForegroundColor Red
                     break ; Write-Host -Object "|"
                 }
             } else {
-                    Write-Host -Object "[ERROR] VM [ $VmName ] and [ $RscName ] must be in the same location." -ForegroundColor Red
+                    Write-Host -Object "| -- Error -- VM [ $VmName ] and [ $RscName ] must be in the same location." -ForegroundColor Red
                     break ; Write-Host -Object "|"
             }
         }    

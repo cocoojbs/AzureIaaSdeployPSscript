@@ -18,7 +18,7 @@ function add_AvailabilitySet {
                 New-AzProximityPlacementGroup -Name $ppgName -ResourceGroupName $rgName -Location $location -AsJob | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
-                    Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                    Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                     Get-Job | Remove-Job | Out-Null
                     break ; Write-Host -Object "|"
                 }
@@ -44,7 +44,7 @@ function add_AvailabilitySet {
             }
             Get-Job | Wait-Job | Out-Null
             if (Get-Job -State Failed) {
-                Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                 Get-Job | Remove-Job | Out-Null
                 break ; Write-Host -Object "|"
             }

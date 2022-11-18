@@ -20,14 +20,14 @@ function add_StorageAccount {
                 Write-Host -Object "|"
                 $vm = Get-AzVM -Name $vmName -resourceGroup $vmRGs[$vm_num] -ErrorAction SilentlyContinue
                 if (!($vm)) {
-                    Write-Host -Object "[ERROR] VM [ ${vmName} ] not found." -ForegroundColor "Red"
+                    Write-Host -Object "| -- Error -- VM [ ${vmName} ] not found." -ForegroundColor "Red"
                     break ; Write-Host -Object "|"
                 }
                 $vm.DiagnosticsProfile.BootDiagnostics.Enabled=$true                
                 Update-AzVM -VM $vm -ResourceGroupName $vmRGs[$vm_num] -AsJob | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
-                    Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                    Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                     Get-Job | Remove-Job | Out-Null
                     break ; Write-Host -Object "|"
                 }
@@ -40,7 +40,7 @@ function add_StorageAccount {
         } else {
             Write-Host -Object "| -- Azure_Storage_Account [ $storageAccount ] --"
             Write-Host -Object "|"
-            add_ResourceGroup $storgeResourceGroup $location
+            add_ResourceGroup $storageResourceGroup $location
             $storage = Get-AzStorageAccount -AccountName $storageAccount -ResourceGroup $storageResourceGroup -ErrorAction SilentlyContinue
 
             # Check if STORAGEACCOUNT exist.
@@ -49,7 +49,7 @@ function add_StorageAccount {
                 try {
                     $url = curl $fqdn
                     if ($url) {
-                        Write-Host -Object "[ERROR] ${storageAccount} is not available. StorageAccountName must be unique." -ForegroundColor "Red"
+                        Write-Host -Object "| -- Error -- ${storageAccount} is not available. StorageAccountName must be unique." -ForegroundColor "Red"
                         break ; Write-Host -Object "|"
                     }
                 } catch {
@@ -58,7 +58,7 @@ function add_StorageAccount {
                 }
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
-                    Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                    Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                     Get-Job | Remove-Job | Out-Null
                     break ; Write-Host -Object "|"
                 }
@@ -69,7 +69,7 @@ function add_StorageAccount {
                 Write-Host -Object "| STORAGE ResourceID: "
                 $storage.Id
             } catch {
-                Write-Host -Object "[ERROR] STORAGE [ ${storageAccount} ] deploy failed." -ForegroundColor "Red"
+                Write-Host -Object "| -- Error -- STORAGE [ ${storageAccount} ] deploy failed." -ForegroundColor "Red"
             }
             Write-Host -Object "|"
 
@@ -81,14 +81,14 @@ function add_StorageAccount {
                 Write-Host -Object "|"
                 $vm = Get-AzVM -Name $vmName -resourceGroup $vmRGs[$vm_num] -ErrorAction SilentlyContinue
                 if (!($vm)) {
-                    Write-Host -Object "[ERROR] VM [ ${vmName} ] not found." -ForegroundColor "Red"
+                    Write-Host -Object "| -- Error -- VM [ ${vmName} ] not found." -ForegroundColor "Red"
                     break ; Write-Host -Object "|"
                 }
                 Set-AzVMBootDiagnostic -VM $vm -Enable -ResourceGroupName $storageResourceGroup -StorageAccountName $storageAccount
                 Update-AzVM -VM $vm -ResourceGroupName $vmRGs[$vm_num] -AsJob | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
-                    Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                    Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                     Get-Job | Remove-Job | Out-Null
                     break ; Write-Host -Object "|"
                 }
@@ -109,7 +109,7 @@ function add_StorageAccount {
             Write-Host -Object "|"
             $nsg = Get-AzNetworkSecurityGroup -Name $nsgName -ResourceGroupName $nsgRGs[$nsg_num] -ErrorAction SilentlyContinue
             if (!($nsg)) {
-                Write-Host -Object "[ERROR]  NSG [ ${nsgName} ] not found." -ForegroundColor "Red"
+                Write-Host -Object "| -- Error --  NSG [ ${nsgName} ] not found." -ForegroundColor "Red"
                 break ; Write-Host -Object "|"
             }
             $NwWatcher = "NetworkWatcher_" + $location
@@ -119,7 +119,7 @@ function add_StorageAccount {
 
             Get-Job | Wait-Job | Out-Null
             if (Get-Job -State Failed) {
-                Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
+                Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                 Get-Job | Remove-Job | Out-Null
                 break ; Write-Host -Object "|"
             }
