@@ -41,7 +41,7 @@ function add_VirtualNetwork {
             $nsg = Get-AzNetworkSecurityGroup -Name $nsgName[$nsg_num] -resourceGroup $nsg_rg -ErrorAction SilentlyContinue
             if (!($nsg)) {
                 Write-Host -Object "| NSG [ ${nsg_name}] ] deploying..."
-                New-AzNetworkSecurityGroup -Name $nsgName[$n] -resourceGroup $nsg_rg -Location $Location -AsJob -Force | Out-Null
+                New-AzNetworkSecurityGroup -Name $nsgName[$nsg_num] -resourceGroup $nsg_rg -Location $Location -AsJob -Force | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
                     Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
@@ -51,7 +51,7 @@ function add_VirtualNetwork {
                 Get-Job | Remove-Job | Out-Null
             }
             Write-Host -Object "| NSG_ID: "
-            ($nsg = Get-AzNetworkSecurityGroup -Name $nsgName[$n] -resourceGroup $nsg_rg).Id
+            ($nsg = Get-AzNetworkSecurityGroup -Name $nsgName[$nsg_num] -resourceGroup $nsg_rg).Id
             Write-Host -Object "|"
 
             Write-Host -Object "| -- Azure_Virtual_Network_Subnet [ $subnetName ] --"
@@ -60,9 +60,9 @@ function add_VirtualNetwork {
             $subnet = Get-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet -ErrorAction SilentlyContinue
             if (!($subnet)) {
                 Write-Host -Object "| SUBNET [ ${subnetName} ] deploying... "
-                $nsg = Get-AzNetworkSecurityGroup -Name $nsgName[$n] -resourceGroup $nsg_rg
+                $nsg = Get-AzNetworkSecurityGroup -Name $nsgName[$nsg_num] -resourceGroup $nsg_rg
                 Add-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet `
-                -AddressPrefix $subnetRanges[$n] -NetworkSecurityGroupId $nsg.Id | set-AzVirtualNetwork -AsJob | Out-Null
+                -AddressPrefix $subnetRanges[$nsg_num] -NetworkSecurityGroupId $nsg.Id | set-AzVirtualNetwork -AsJob | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
                     Write-Host -Object "[ERROR] some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error 
