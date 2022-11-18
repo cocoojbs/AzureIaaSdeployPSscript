@@ -1,5 +1,0 @@
-vm_name,vm_resourceGroup,vm_size,vmOsDisk_type,vmOsDisk_size,vmDataDisks_type,vmDataDisks_size,adminId,adminPass,ImageName,ImageResourceGroup,AvailabilitySet,ProximityPlacementGroup
-aionpre-dc,aionpre,Standard_A1_v2,Standard_LRS,128,Standard_LRS,32,azureadmin,!QAZ2wsx3edc,,,,
-hpchc001,HPC-HRG01,Standard_F4s_v2,Standard_LRS,128,Standard_LRS,16,msahpcadmin,v0g2s0@3f5b4,,,,
-pxcc001,px-crg01,Standard_D4_v3,Standard_LRS,128,,,msapxadmin,v0g2s0@3f5b5,,,,
-pxfc001,px-frg01,Standard_D4_v3,Standard_LRS,128,,,msapxadmin,v0g2s0@3f5b5,,,,

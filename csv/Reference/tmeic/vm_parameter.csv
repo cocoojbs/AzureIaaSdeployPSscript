@@ -1,3 +1,0 @@
-vm_name,vm_resourceGroup,vm_size,vmOsDisk_type,vmOsDisk_size,vmDataDisks_type,vmDataDisks_size,adminId,adminPass,ImageName,ImageResourceGroup,AvailabilitySet,ProximityPlacementGroup
-vmwebextjpe01,mytmeic,Standard_F16s_v2,StandardSSD_LRS,256,Standard_LRS,128,tmeicadmin,ouU6%Afw1JtL[+C<,,,avail-web-prd-jpe-01,
-vmdsmintjpe01,mytmeic,Standard_F8s_v2,Standard_LRS,128,,,tmeicadmin,*ejj@4VZ(P4w^JU<,,,,

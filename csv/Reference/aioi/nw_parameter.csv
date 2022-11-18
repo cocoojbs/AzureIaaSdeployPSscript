@@ -1,5 +1,0 @@
-﻿vm_name,vm_resourceGroup,ipAddress,vNet_name,vNet_resourceGroup,location,range,subnetNames,subnetRanges,NSG_names,NSG_resourceGroups
-aionpre-dc,aionpre,192.168.0.96,aionpre-net,aionpre,japaneast,192.168.0.0/24,aionpre-sn01;aionpre-sn02,192.168.0.0/25;192.168.0.128/25,nsg-aionpre-sn01;nsg-aionpre-sn02,aionpre;aionpre
-hpchc001,hpc-hrg01,172.16.1.4,vnet01,msa-nwrg01,japaneast,172.16.0.0/16,subnet01;subnet02;subnet03;GatewaySubnet,172.16.1.0/24;172.16.2.0/24;172.16.3.0/24;172.16.255.0/24,MSA-HPCNSG01;MSA-PXNSG01;MSA-PXNSG02;,msa-nwrg01;msa-nwrg01;msa-nwrg01;
-pxcc001,px-crg01,172.16.2.11,vnet01,msa-nwrg01,japaneast,172.16.0.0/16,subnet02,172.16.2.0/24,,
-pxfc001,px-frg01,172.16.3.11,vnet01,msa-nwrg01,japaneast,172.16.0.0/16,subnet03,172.16.3.0/24,,

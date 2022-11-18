@@ -1,2 +1,0 @@
-﻿storageName,storageResourceGroup,location,sku,bootdiag_vmNames,vmResourceGroups,flowlog_nsgs,nsgResourceGroups,RetentionInDays
-mytmeicwaflogprdjpe01,mytmeic,japaneast,Standard_LRS,,,,,

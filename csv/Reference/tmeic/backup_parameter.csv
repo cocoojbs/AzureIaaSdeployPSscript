@@ -1,3 +1,0 @@
-﻿vmName,vmRg,RecoveryServicesName,RecoveryServicesRg,policyName,scheduleRunFrequency,scheduleRunTimes,instantRpRetentionRangeInDays,count,weeklySchedule,timeZone,Redundancy
-pscent7,psrg,rsc01,psrg,WeeklyPolicy,Weekly,3:00,5,1,Sunday,Tokyo Standard Time,locallyredundant
-pswin2019,psrg,rsc01,psrg,DailyPolicy,Daily,2:00,2,7,,Tokyo Standard Time,locallyredundant
