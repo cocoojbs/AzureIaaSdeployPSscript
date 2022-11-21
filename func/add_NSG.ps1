@@ -26,7 +26,7 @@ function add_NSG {
                 }
             }
             Write-Host -Object "| NSG_ID: "
-            ($nsg = Get-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg).Id
+            (Get-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg).Id
             Write-Host -Object "|"
             $nsg_num ++ ; Start-Sleep 1
         }

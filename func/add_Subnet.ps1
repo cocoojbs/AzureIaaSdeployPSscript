@@ -1,4 +1,4 @@
-function add_VirtualNetwork {
+function add_Subnet {
     foreach ($line in $nw_csv) {
         $vnetName = $line.vNet_name
         $vnetResourceGroup = $line.vNet_resourceGroup
@@ -8,6 +8,8 @@ function add_VirtualNetwork {
         $subnetRanges = $line.subnetRanges.Split(";")
         $nsgNames = $line.NSG_names.Split(";")
         $nsgResourceGroups = $line.NSG_resourceGroups.Split(";")
+
+    <#
 
         add_ResourceGroup $vnetResourceGroup $location
         $vnet = Get-AzVirtualNetwork -Name $vnetName -ResourceGroup $vnetResourceGroup -ErrorAction SilentlyContinue
@@ -28,7 +30,9 @@ function add_VirtualNetwork {
         Write-Host -Object "| VNET_ID: "
         (Get-AzVirtualNetwork -Name $vnetName -ResourceGroup $vnetResourceGroup).Id
         Write-Host -Object "|"
-    <#
+
+
+    #>
 
         $subnet_num = 0
         foreach ($subnetName in $subnetNames) {
@@ -39,6 +43,8 @@ function add_VirtualNetwork {
                 Write-Host -Object "|"
                 Write-Host -Object "| SUBNET [ ${subnetName} ] deploying... "
                 $nsg = Get-AzNetworkSecurityGroup -Name $nsgNames[$subnet_num] -resourceGroup $nsgResourceGroups[$subnet_num] -ErrorAction SilentlyContinue
+    <#
+    
                 if (!($nsg)) {
                     add_NSG
                 }
@@ -49,7 +55,9 @@ function add_VirtualNetwork {
                         Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error 
                         Get-Job | Remove-Job | Out-Null
                         break ; Write-Host -Object "|"
-                    }
+                }
+    
+    #>
             } else {
                 break ; Write-Host -Object "|"
             }
@@ -60,11 +68,8 @@ function add_VirtualNetwork {
             Write-Host -Object "|"
             $subnet_num ++ ; Start-Sleep 1
         }
-
-    #>
-        Start-Sleep 1
     }
-    Write-Host -Object "| function add_VirtualNetwork completed."
+    Write-Host -Object "| function add_Subnet completed."
     Write-Host -Object "|"
 }
 

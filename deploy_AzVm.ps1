@@ -31,9 +31,10 @@ try {
     . .\func\Confirmation.ps1
     . .\func\add_ResourceGroup.ps1
     . .\func\add_VirtualNetwork.ps1
+    . .\func\add_NSG.ps1
+    . .\func\add_Subnet.ps1
     . .\func\add_NetworkInterface.ps1
     . .\func\add_NetworkSecurityRule.ps1
-    . .\func\add_NSG.ps1
     . .\func\add_VM.ps1
     . .\func\add_StorageAccount.ps1
     . .\func\add_AzRecoveryServicesVault.ps1
