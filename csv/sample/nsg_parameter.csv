@@ -1,4 +1,4 @@
 ﻿nsgName,nsgResourceGroup,ruleName,access,protocol,direction,priority,sourceAddresses,sourcePorts,destAddresses,destPorts,description
-nsg01,rg01,Allow80and443,allow,TCP,inbound,1000,10.0.0.0/16,*,192.168.0.0/26,80;443,
-nsg02,rg01,Allow1433,allow,TCP,inbound,1000,192.168.0.0/26,*,192.168.0.64/26,1433,
-nsg03,rg01,DenyAllInbound,deny,*,inbound,4096,*,*,*,*,
+nsg01,rg0001,Allow80and443,allow,TCP,inbound,1000,10.0.0.0/16,*,192.168.0.0/26,80;443,
+nsg02,rg0001,Allow1433,allow,TCP,inbound,1000,192.168.0.0/26,*,192.168.0.64/26,1433,
+nsg03,rg0001,DenyAllInbound,deny,*,inbound,4096,*,*,*,*,

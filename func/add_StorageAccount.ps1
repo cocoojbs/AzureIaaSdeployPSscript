@@ -38,9 +38,8 @@ function add_StorageAccount {
                 $vm_num ++ ; Start-Sleep 1
             }
         } else {
-            Write-Host -Object "| -- Azure_Storage_Account [ $storageAccount ] --"
-            Write-Host -Object "|"
             add_ResourceGroup $storageResourceGroup $location
+
             $storage = Get-AzStorageAccount -AccountName $storageAccount -ResourceGroup $storageResourceGroup -ErrorAction SilentlyContinue
 
             # Check if STORAGEACCOUNT exist.
@@ -53,6 +52,8 @@ function add_StorageAccount {
                         break ; Write-Host -Object "|"
                     }
                 } catch {
+                    Write-Host -Object "| -- Azure_Storage_Account [ $storageAccount ] --"
+                    Write-Host -Object "|"
                     Write-Host -Object "| STORAGE [ ${storageAccount} ] deploying..."
                     New-AzStorageAccount -AccountName $storageAccount -resourceGroup $storageResourceGroup -Location $location -SkuName $sku -AsJob | Out-Null
                 }
@@ -63,13 +64,11 @@ function add_StorageAccount {
                     break ; Write-Host -Object "|"
                 }
                 Get-Job | Remove-Job | Out-Null
-            }
-            $storage = Get-AzStorageAccount -AccountName $storageAccount -ResourceGroup $storageResourceGroup -ErrorAction SilentlyContinue
-            try {
+                $storage = Get-AzStorageAccount -AccountName $storageAccount -ResourceGroup $storageResourceGroup -ErrorAction SilentlyContinue
                 Write-Host -Object "| STORAGE ResourceID: "
-                $storage.Id
-            } catch {
-                Write-Host -Object "| -- Error -- STORAGE [ ${storageAccount} ] deploy failed." -ForegroundColor "Red"
+                Write-Host "|"$storage.Id
+            } else {
+                Write-Host -Object "| STORAGE [ ${storageAccount} ] already exists." -ForegroundColor "Yellow"
             }
             Write-Host -Object "|"
 

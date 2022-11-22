@@ -7,14 +7,15 @@ function add_AvailabilitySet {
         $faultDomain = $line.FaultDomain
         $ppgName = $line.ProximityPlacementGroup
 
-        # Check if VM_RESOURCEGROUP exists.
-        Write-Host -Object "| -- Proximity_Placement_Group [ $ppgName ] --"
-        Write-Host -Object "|"
         add_ResourceGroup $rgName $location
+
+        # Check if VM_RESOURCEGROUP exists.
         if ($ppgName) {
             $ppg = Get-AzProximityPlacementGroup -Name $ppgName -ResourceGroupName $rgName -ErrorAction SilentlyContinue
             if (!($ppg)) {
-                Write-Host -Object "| ProximityPlacementGroup [ ${ppgName} ] deploying..."
+                Write-Host -Object "| -- Proximity_Placement_Group [ $ppgName ] --"
+                Write-Host -Object "|"
+                        Write-Host -Object "| ProximityPlacementGroup [ ${ppgName} ] deploying..."
                 New-AzProximityPlacementGroup -Name $ppgName -ResourceGroupName $rgName -Location $location -AsJob | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
@@ -51,7 +52,7 @@ function add_AvailabilitySet {
             Get-Job | Remove-Job | Out-Null
         }
         Write-Host -Object "| AvailabilitySet ResourceID: "
-        ($aset = Get-AzAvailabilitySet -Name $asetName -ResourceGroupName $rgName).Id
+        Write-Host "|"($aset = Get-AzAvailabilitySet -Name $asetName -ResourceGroupName $rgName).Id
         Write-Host -Object "|"
         Start-Sleep 1
     }

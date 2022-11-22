@@ -8,7 +8,9 @@ function add_NSG {
         foreach ($nsgName in $nsgNames) {
             if(!($nsgName)){ break }
             $nsg_rg = $nsgResourceGroup[$nsg_num]
+
             add_ResourceGroup $nsg_rg $location
+
             $nsg = Get-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg -ErrorAction SilentlyContinue
             if (!($nsg)) {
                 Write-Host -Object "| -- Azure_Network_Security_Group [ ${nsgName} ] --"
@@ -20,13 +22,12 @@ function add_NSG {
                     Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error
                     Get-Job | Remove-Job | Out-Null
                     break ; Write-Host -Object "|"
-                } else {
-                    Get-Job | Remove-Job | Out-Null
-                    break ; Write-Host -Object "|"
                 }
-            }
-            Write-Host -Object "| NSG_ID: "
-            (Get-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg).Id
+                Get-Job | Remove-Job | Out-Null
+                Write-Host -Object "|"
+                Write-Host -Object "| NSG_ID: "
+                Write-Host "|"(Get-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg).Id
+                }
             Write-Host -Object "|"
             $nsg_num ++ ; Start-Sleep 1
         }

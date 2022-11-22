@@ -70,8 +70,24 @@ Write-Host -Object "|  VirtualNetwork"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 $nw_paramFile
 $nw_csv = Import-Csv -Path $nw_paramFile
-$nw_csv | select-Object vNet_name,vNet_resourceGroup,location,range,subnetNames,subnetRanges,NSG_names,NSG_ResourceGroups | format-table
+$nw_csv | select-Object vNet_name,vNet_resourceGroup,location,range | format-table
 Confirmation add_VirtualNetwork
+
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|  NSG"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+$nw_csv | select-Object vNet_name,vNet_resourceGroup,subnetNames,NSG_names,NSG_ResourceGroups | format-table
+Confirmation add_NSG
+
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|  Subnet"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+$nw_csv | select-Object vNet_name,vNet_resourceGroup,subnetNames,subnetRanges,NSG_names | format-table
+Confirmation add_Subnet
 
 Write-Host -Object "|"
 Write-Host -Object "|"

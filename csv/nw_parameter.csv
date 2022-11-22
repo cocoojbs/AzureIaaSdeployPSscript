@@ -1,4 +1,4 @@
 ﻿vm_name,vm_resourceGroup,ipAddress,vNet_name,vNet_resourceGroup,location,range,subnetNames,subnetRanges,NSG_names,NSG_resourceGroups
-vmweb01,rg01,192.168.0.11,vnetweb01,rg01,japaneast,192.168.0.0/24,subnet01,192.168.0.0/26,nsg01,rg01
-vmweb02,rg01,192.168.0.12,vnetweb01,rg01,japaneast,192.168.0.0/24,subnet01,192.168.0.0/26,nsg01,rg01
-vmdb01,rg01,192.168.0.101,vnetweb01,rg01,japaneast,192.168.0.0/24,subnet02;subnet03,192.168.0.64/26;192.168.0.128/25,nsg02;nsg03,rg01;rg01
+vmweb01,rg0102,192.168.0.11,vnetweb01,rg0102,japaneast,192.168.0.0/24,subnet01,192.168.0.0/26,nsg01,rg0102
+vmweb02,rg0102,192.168.0.12,vnetweb01,rg0102,japaneast,192.168.0.0/24,subnet01,192.168.0.0/26,nsg01,rg0102
+vmdb01,rg0102,192.168.0.101,vnetweb01,rg0102,japaneast,192.168.0.0/24,subnet02;subnet03,192.168.0.64/26;192.168.0.128/25,nsg02;nsg03,rg0102;rg0102

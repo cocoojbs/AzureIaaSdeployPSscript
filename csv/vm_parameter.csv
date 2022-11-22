@@ -1,4 +1,4 @@
 vm_name,vm_resourceGroup,vm_size,vmOsDisk_type,vmOsDisk_size,vmDataDisks_type,vmDataDisks_size,adminId,adminPass,ImageName,ImageResourceGroup,AvailabilitySet,ProximityPlacementGroup
-vmweb01,rg01,Standard_F2s_v2,Standard_LRS,32,,,vmadmin,#password123,,,asweb,ppgweb
-vmweb02,rg01,Standard_F2s_v2,Standard_LRS,32,,,vmadmin,#password123,,,asweb,ppgweb
-vmdb01,rg01,Standard_F2s_v2,Standard_LRS,32,StandardSSD_LRS,64,vmadmin,#password123,win2016-image,rg01,,
+vmweb01,rg0102,Standard_F2s_v2,Standard_LRS,32,,,vmadmin,#password123,,,asweb,ppgweb
+vmweb02,rg0102,Standard_F2s_v2,Standard_LRS,32,,,vmadmin,#password123,,,asweb,ppgweb
+vmdb01,rg0102,Standard_F2s_v2,Standard_LRS,32,StandardSSD_LRS,64,vmadmin,#password123,win2016-image,rg01,,

@@ -20,25 +20,25 @@ function add_AzRecoveryServicesVault {
         $timezone = $param.timeZone
         $Redundancy = $param.Redundancy
 
-        if(!($rsc_name)) {
-            break
-        }
-        Write-Host -Object "| -- Azure_Backup [ ${rsc_name} ] --"
-        Write-Host -Object "|"
+        if(!($rsc_name)) { break }
 
         $AzVM = Get-AzVM -Name $vm_name -ResourceGroupName $vm_rg -ErrorAction SilentlyContinue
         if(!($AzVM)) {
             Write-Host -Object "| -- Error -- VM [ ${vm_name} ] not found." -ForegroundColor Red
             break ; Write-Host -Object "|"
         }
+
         add_ResourceGroup $rsc_rg $location
+
         $rsc = Get-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg -ErrorAction SilentlyContinue
         if(!($rsc)) {
-            Write-Host -Object "| RecoveryServicesVault [ ${rsc_name} ] deploying..."
+            Write-Host -Object "| -- Azure_Backup [ ${rsc_name} ] --"
+            Write-Host -Object "|"
+                Write-Host -Object "| RecoveryServicesVault [ ${rsc_name} ] deploying..."
             New-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg -Location $AzVM.Location
         }        
         Write-Host -Object "| RSC ResourceID: "
-        ($rsc = Get-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg).Id
+        Write-Host "|"(Get-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg).Id
         Write-Host -Object "|"
 
         # Get-AzRecoveryServicesBackupProtectionPolicy

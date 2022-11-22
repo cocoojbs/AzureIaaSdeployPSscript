@@ -22,14 +22,13 @@ function add_VM {
         $availabilitysetName = $line.AvailabilitySet
         $proximityPlacementGroupName = $line.ProximityPlacementGroup
 
-        Write-Host -Object "| -- Azure_Virtual_Machines [ $vmName ] --"
-        Write-Host -Object "|"
         $azVM = Get-AzVM -Name $vmName -resourceGroup $resourceGroup -ErrorAction SilentlyContinue
         if ($azVM) {
-            Write-Host -Object "| VM ResourceID: "
-            ($azVM = Get-AzVM -Name $vmName -resourceGroup $resourceGroup).id
+            Write-Host -Object "| Virtual_Machines [ $vmName ] already exists." -ForegroundColor "Yellow"
         } else {
-
+            Write-Host -Object "| -- Azure_Virtual_Machines [ $vmName ] --"
+            Write-Host -Object "|"
+    
             # AvailabilitySet settings
             if ($availabilitysetName) {
                 $availabilityset = Get-AzAvailabilitySet -Name $availabilitysetName -ResourceGroup $resourceGroup -ErrorAction SilentlyContinue
@@ -119,7 +118,7 @@ function add_VM {
                 $vmConfig = Set-AzVMOSDisk -Name $osDiskName -CreateOption "FromImage" -Caching "ReadWrite" -VM $vmConfig -StorageAccountType $osDiskType -DiskSizeInGB $osDiskSize
             } else {
                 # Custom VM image select
-                $image = Get-AzImage -ImageName $imageName -ResourceGroup $imageResourceGroup
+                $image = Get-AzImage -ImageName $imageName -ResourceGroup $imageResourceGroup -ErrorAction SilentlyContinue
                 if (!($image)) {
                     Write-Host -Object "| -- Error -- IMAGE [ ${imageName} ] not found in [ ${imageResourceGroup} ]." -ForegroundColor "Red"
                     break ; Write-Host -Object "|"
@@ -171,7 +170,7 @@ function add_VM {
             }
             Get-Job | Remove-Job | Out-Null
             Write-Host -Object "| VM ResourceID: "
-            (Get-AzVM -Name $vmName -resourceGroup $resourceGroup).id
+            Write-Host "|"(Get-AzVM -Name $vmName -resourceGroup $resourceGroup).id
             Write-Host -Object "|"
         }
         Start-Sleep 1
