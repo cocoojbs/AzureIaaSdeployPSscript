@@ -14,7 +14,7 @@ try {
     Get-Variable *Obj | Remove-Variable -ErrorAction SilentlyContinue
     (Get-AzSubscription).Name[0] | Out-Null
 } catch {
-    Write-Host "[ERROR] Get-AzSubscription : Run Connect-AzAccount to login." -ForegroundColor Red
+    Write-Host "| -- ERROR -- Get-AzSubscription : Run Connect-AzAccount to login." -ForegroundColor Red
     exit
 }
 
@@ -28,6 +28,7 @@ Write-Host -Object "|"
 # Load Functions
 Set-Location -Path (Split-Path -Parent $MyInvocation.MyCommand.Path)
 try {
+    . .\func\check_cmdlt.ps1
     . .\func\Confirmation.ps1
     . .\func\add_ResourceGroup.ps1
     . .\func\add_VirtualNetwork.ps1
@@ -40,11 +41,13 @@ try {
     . .\func\add_AzRecoveryServicesVault.ps1
     . .\func\add_AvailabilitySet.ps1
 } catch {
-    Write-Host "[ERROR] Loading function Files failed." -ForegroundColor Red
+    Write-Host "| -- ERROR -- Loading function Files failed." -ForegroundColor Red
     Remove-Variable * -Exclude $rc* -ErrorAction SilentlyContinue
     stop-Transcript
     exit
 }
+
+check_cmdlt
 
 # Load CSVs
 try {
@@ -56,7 +59,7 @@ try {
     Test-Path -Path $availability_paramFile | Out-Null
     Test-Path -Path $list_file | Out-Null
 } catch {
-    Write-Host "[ERROR] Loading parameter Files failed." -ForegroundColor Red
+    Write-Host "| -- ERROR -- Loading parameter Files failed." -ForegroundColor Red
     Remove-Variable * -Exclude $rc* -ErrorAction SilentlyContinue
     stop-Transcript
     exit
