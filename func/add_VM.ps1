@@ -72,6 +72,7 @@ function add_VM {
             # OS setting
             if(!($imageName)) {
                 $os = Get-Content $list_file | Out-GridView -PassThru
+                
                 # Load os.list when parameter from Out-GridView is null(or Azure Cloud Shell)
                 if (!($os) -Or ($os.substring(0,1) -eq "#")) {
                     Write-Host -Object " - - - - -"
@@ -90,6 +91,7 @@ function add_VM {
                 $sku = Get-AzVMImageSku -Location $location -PublisherName $publisherName -Offer $offer |`
                 Select-Object skus | Select-String -Pattern $version"-*" | %{ $($_ -split"=")[1].Replace("}","")} |`
                 Out-GridView -PassThru
+
                 # List Get-AzVMImageSku when parameter from Out-GridView is null(or Azure Cloud Shell)
                 if (!($sku) -Or ($sku.substring(0,1) -eq "#")) {
                     $sku_list = Get-AzVMImageSku -Location $location -PublisherName $publisherName -Offer $offer |`
@@ -105,6 +107,7 @@ function add_VM {
                     [int]$sku_num=Read-Host "| Select SKU ##_number"
                     $sku = $sku_list[$sku_num]
                 }
+
                 # Confirm input Infomation
                 Write-Host -Object "| VM [ $vmName ]'s OS Version infomation as follows."
                 $osType
@@ -124,6 +127,7 @@ function add_VM {
                     $vmConfig = Set-AzVMOSDisk -Name $osDiskName -CreateOption "FromImage" -Caching "ReadWrite" -VM $vmConfig -StorageAccountType $osDiskType -DiskSizeInGB $osDiskSize
                 }
             } else {
+
                 # Custom VM image select
                 $image = Get-AzImage -ImageName $imageName -ResourceGroup $imageResourceGroup -ErrorAction SilentlyContinue
                 if (!($image)) {
