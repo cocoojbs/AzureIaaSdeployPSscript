@@ -1,0 +1,225 @@
+**********************
+PowerShell transcript start
+Start time: 20221124175036
+Username: JBS\kitamurat
+RunAs User: JBS\kitamurat
+Configuration Name: 
+Machine: W1051663N211 (Microsoft Windows NT 10.0.19042.0)
+Host Application: C:\Program Files\PowerShell\7\pwsh.dll
+Process ID: 13680
+PSVersion: 7.3.0
+PSEdition: Core
+GitCommitId: 7.3.0
+OS: Microsoft Windows 10.0.19042
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.10032.0, 6.0.0, 6.1.0, 6.2.0, 7.0.0, 7.1.0, 7.2.0, 7.3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+Transcript started, output file is .\log\2022-11-24_1750.log
+ Subscription:
+HC-HC1Dept (b0da899c-406c-4ebc-b7d5-0f9286d42d1e) - cc7dee35-16af-4e40-a4d4-2619d7c0024f - kitamurat@jbs.com
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  VirtualNetwork
+| - - - - - - - - - - - - - -
+.\csv\nw_parameter.csv
+
+vNet_name vNet_resourceGroup location  range
+--------- ------------------ --------  -----
+vnetweb01 rg0102             japaneast 192.168.0.0/24
+vnetweb01 rg0102             japaneast 192.168.0.0/24
+vnetweb01 rg0102             japaneast 192.168.0.0/24
+
+|
+| Canceled.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  NSG
+| - - - - - - - - - - - - - -
+
+vNet_name vNet_resourceGroup subnetNames       NSG_names   NSG_resourceGroups
+--------- ------------------ -----------       ---------   ------------------
+vnetweb01 rg0102             subnet01          nsg01       rg0102
+vnetweb01 rg0102             subnet01          nsg01       rg0102
+vnetweb01 rg0102             subnet02;subnet03 nsg02;nsg03 rg0102;rg0102
+
+|
+| Canceled.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  Subnet
+| - - - - - - - - - - - - - -
+
+vNet_name vNet_resourceGroup subnetNames       subnetRanges                     NSG_names
+--------- ------------------ -----------       ------------                     ---------
+vnetweb01 rg0102             subnet01          192.168.0.0/26                   nsg01
+vnetweb01 rg0102             subnet01          192.168.0.0/26                   nsg01
+vnetweb01 rg0102             subnet02;subnet03 192.168.0.64/26;192.168.0.128/25 nsg02;nsg03
+
+|
+| Canceled.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  AvailabilitySet
+| - - - - - - - - - - - - - -
+.\csv\availability_parameter.csv
+
+AvailabilitySet vm_resourceGroup Location  UpdateDomain FaultDomain ProximityPlacementGroup
+--------------- ---------------- --------  ------------ ----------- -----------------------
+asweb           rg0102           japaneast 5            2           ppgweb
+
+|
+| Canceled.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  NetworkSecurityRule
+| - - - - - - - - - - - - - -
+.\csv\nsg_parameter.csv
+
+nsgName nsgResourceGroup ruleName       access protocol direction priority sourceAddresses sourcePorts destAddresses
+------- ---------------- --------       ------ -------- --------- -------- --------------- ----------- -------------
+nsg01   rg0102           Allow80and443  allow  TCP      inbound   1000     10.0.0.0/16     *           192.168.0.0/26
+nsg02   rg0102           Allow1433      allow  TCP      inbound   1000     192.168.0.0/26  *           192.168.0.64/26
+nsg03   rg0102           DenyAllInbound deny   *        inbound   4096     *               *           *
+
+|
+| Canceled.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  VM_NIC
+| - - - - - - - - - - - - - -
+.\csv\nw_parameter.csv
+
+vm_name vNet_name subnetNames       subnetRanges                     ipAddress
+------- --------- -----------       ------------                     ---------
+vmweb01 vnetweb01 subnet01          192.168.0.0/26                   192.168.0.11
+vmweb02 vnetweb01 subnet01          192.168.0.0/26                   192.168.0.12
+vmdb01  vnetweb01 subnet02;subnet03 192.168.0.64/26;192.168.0.128/25 192.168.0.101
+
+|
+| Canceled.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  VM
+| - - - - - - - - - - - - - -
+.\csv\vm_parameter.csv
+
+vm_name vm_resourceGroup vm_size         vmOsDisk_type vmOsDisk_size vmDataDisks_type vmDataDisks_size ImageName
+------- ---------------- -------         ------------- ------------- ---------------- ---------------- ---------
+vmweb01 rg0102           Standard_F2s_v2 Standard_LRS  32
+vmweb02 rg0102           Standard_F2s_v2 Standard_LRS  32
+vmdb01  rg0102           Standard_F2s_v2 Standard_LRS  32            StandardSSD_LRS  64               win2016-image
+
+|
+| -- Azure_Virtual_Machines [ vmweb01 ] --
+|
+| VM [ vmweb01 ]'s OS Version infomation as follows.
+Windows
+MicrosoftWindowsServer
+WindowsServer2019-datacenter-smalldisk-g2
+WARNING: Upcoming breaking changes in the cmdlet 'New-AzVM' :
+Starting in May 2023 the "New-AzVM" cmdlet will deploy with the Trusted Launch configuration by default. To know more about Trusted Launch, please visit https://docs.microsoft.com/en-us/azure/virtual-machines/trusted-launch
+It is recommended to use parameter "-PublicIpSku Standard" in order to create a new VM with a Standard public IP.Specifying zone(s) using the "-Zone" parameter will also result in a Standard public IP.If "-Zone" and "-PublicIpSku" are not specified, the VM will be created with a Basic public IP instead.Please note that the Standard SKU IPs will become the default behavior for VM creation in the future
+Note : Go to https://aka.ms/azps-changewarnings for steps to suppress this breaking change warning, and other information on breaking changes in Azure PowerShell.
+|
+| VM [ vmweb01 ] deploying...
+| VM ResourceID:
+| /subscriptions/b0da899c-406c-4ebc-b7d5-0f9286d42d1e/resourceGroups/rg0102/providers/Microsoft.Compute/virtualMachines/vmweb01
+|
+| -- Azure_Virtual_Machines [ vmweb02 ] --
+|
+ - - - - -
+##,OSTYPE, PUBLISHER, OFFER, SKU
+1 ,Windows,MicrosoftWindowsServer,WindowsServer,2012
+2 ,Windows,MicrosoftWindowsServer,WindowsServer,2016
+3 ,Windows,MicrosoftWindowsServer,WindowsServer,2019
+4 ,Windows,MicrosoftWindowsServer,WindowsServer,2022
+5 ,Windows,MicrosoftWindowsDesktop,Windows-10,win10
+6 ,Windows,MicrosoftWindowsDesktop,Windows-11,win11
+7 ,Linux,RedHat,RHEL,7
+8 ,Linux,RedHat,RHEL,8
+9 ,Linux,OpenLogic,CentOS,7
+10,Linux,OpenLogic,CentOS,8
+11,Linux,Canonical,UbuntuServer,16
+12,Linux,Canonical,UbuntuServer,18
+13,Linux,Canonical,0001-com-ubuntu-server-focal,20
+14,Linux,Debian,Debian-10,10
+15,Linux,Debian,Debian-11,11
+ - - - - -
+ - - - - -
+##,SKU List
+0 ,2012-Datacenter
+1 ,2012-datacenter-gensecond
+2 ,2012-Datacenter-smalldisk
+3 ,2012-datacenter-smalldisk-g2
+4 ,2012-Datacenter-zhcn
+5 ,2012-datacenter-zhcn-g2
+6 ,2012-R2-Datacenter
+7 ,2012-r2-datacenter-gensecond
+8 ,2012-R2-Datacenter-smalldisk
+9 ,2012-r2-datacenter-smalldisk-g2
+10 ,2012-R2-Datacenter-zhcn
+11 ,2012-r2-datacenter-zhcn-g2
+ - - - - -
+| VM [ vmweb02 ]'s OS Version infomation as follows.
+Windows
+MicrosoftWindowsServer
+WindowsServer2012-r2-datacenter-smalldisk-g2
+| function add_VM completed.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  StorageAccount
+| - - - - - - - - - - - - - -
+.\csv\storage_parameter.csv
+
+storageName     storageResourceGroup location  sku          bootdiag_vmNames vmResourceGroups flowlog_nsgs nsgResourceGroups RetentionInDay
+                                                                                                                             s
+-----------     -------------------- --------  ---          ---------------- ---------------- ------------ ----------------- --------------
+vmweb0102bootst rg0102               japaneast Standard_LRS vmweb01;vmweb02  rg0102;rg0102
+vmweb0102flowst rg0102               japaneast Standard_LRS                                   nsg01        rg0102            90
+
+|
+| Canceled.
+|
+|
+|
+| - - - - - - - - - - - - - -
+|  VM_Backup
+| - - - - - - - - - - - - - -
+.\csv\backup_parameter.csv
+
+vmName  vmRg   RecoveryServicesName RecoveryServicesRg policyName   scheduleRunFrequency scheduleRunTimes instantRpRetentionRangeInDays cou
+                                                                                                                                        nt
+------  ----   -------------------- ------------------ ----------   -------------------- ---------------- ----------------------------- ---
+vmweb01 rg0102 rsc01                rg0001             WeeklyPolicy Weekly               3:00             5                             1
+vmdb01  rg0102 rsc01                rg0001             DailyPolicy  Daily                2:00             2                             7
+
+|
+| Canceled.
+|
+|
+|
+| COMPLETE.
+|
+**********************
+PowerShell transcript end
+End time: 20221124175326
+**********************

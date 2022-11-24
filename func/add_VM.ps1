@@ -25,6 +25,7 @@ function add_VM {
         $azVM = Get-AzVM -Name $vmName -resourceGroup $resourceGroup -ErrorAction SilentlyContinue
         if ($azVM) {
             Write-Host -Object "| Virtual_Machines [ $vmName ] already exists." -ForegroundColor "Yellow"
+            break
         } else {
             Write-Host -Object "| -- Azure_Virtual_Machines [ $vmName ] --"
             Write-Host -Object "|"
@@ -71,7 +72,7 @@ function add_VM {
             # OS setting
             if(!($imageName)) {
                 $os = Get-Content $list_file | Out-GridView -PassThru
-                # Load os.list 
+                # Load os.list when parameter from Out-GridView is null(or Azure Cloud Shell)
                 if (!($os) -Or ($os.substring(0,1) -eq "#")) {
                     Write-Host -Object " - - - - -"
                     Get-Content $list_file
@@ -89,6 +90,7 @@ function add_VM {
                 $sku = Get-AzVMImageSku -Location $location -PublisherName $publisherName -Offer $offer |`
                 Select-Object skus | Select-String -Pattern $version"-*" | %{ $($_ -split"=")[1].Replace("}","")} |`
                 Out-GridView -PassThru
+                # List Get-AzVMImageSku when parameter from Out-GridView is null(or Azure Cloud Shell)
                 if (!($sku) -Or ($sku.substring(0,1) -eq "#")) {
                     $sku_list = Get-AzVMImageSku -Location $location -PublisherName $publisherName -Offer $offer |`
                     Select-Object skus | Select-String -Pattern $version"-*" | %{ $($_ -split"=")[1].Replace("}","")} 
@@ -103,19 +105,24 @@ function add_VM {
                     [int]$sku_num=Read-Host "| Select SKU ##_number"
                     $sku = $sku_list[$sku_num]
                 }
+                # Confirm input Infomation
                 Write-Host -Object "| VM [ $vmName ]'s OS Version infomation as follows."
                 $osType
                 $publisherName
                 $offer + $sku
-
-                $nic = Get-AzNetworkInterface -Name "${vmName}-NIC1" -ResourceGroupName $resourceGroup
-                $image = Get-AzVMImage -PublisherName $publisherName -Offer $offer -Skus $sku -Location $nic.Location
-                if (!($image)) {
-                    Write-Host -Object "| -- Error --  SKU [ $sku ] not found in Azure Marketplace." -ForegroundColor "Red"
-                    break ; Write-Host -Object "|"
+                $confirm = Confirmation -command pwd
+                if ($confirm[2] -eq "|") {
+                    "|"; "| Canceled."; "|"; break
+                } else {
+                    $nic = Get-AzNetworkInterface -Name "${vmName}-NIC1" -ResourceGroupName $resourceGroup
+                    $image = Get-AzVMImage -PublisherName $publisherName -Offer $offer -Skus $sku -Location $nic.Location
+                    if (!($image)) {
+                        Write-Host -Object "| -- Error -- SKU [ $sku ] not found in Azure Marketplace." -ForegroundColor "Red"
+                        break ; Write-Host -Object "|"
+                    }
+                    $vmConfig = Set-AzVMSourceImage -PublisherName $publisherName -Offer $offer -Skus $sku -Version "latest" -VM $vmConfig
+                    $vmConfig = Set-AzVMOSDisk -Name $osDiskName -CreateOption "FromImage" -Caching "ReadWrite" -VM $vmConfig -StorageAccountType $osDiskType -DiskSizeInGB $osDiskSize
                 }
-                $vmConfig = Set-AzVMSourceImage -PublisherName $publisherName -Offer $offer -Skus $sku -Version "latest" -VM $vmConfig
-                $vmConfig = Set-AzVMOSDisk -Name $osDiskName -CreateOption "FromImage" -Caching "ReadWrite" -VM $vmConfig -StorageAccountType $osDiskType -DiskSizeInGB $osDiskSize
             } else {
                 # Custom VM image select
                 $image = Get-AzImage -ImageName $imageName -ResourceGroup $imageResourceGroup -ErrorAction SilentlyContinue

@@ -15,17 +15,17 @@ function add_Subnet {
                 Write-Host -Object "| -- Azure_Virtual_Network_Subnet [ $subnetName ] --"
                 Write-Host -Object "|"
                 Write-Host -Object "| SUBNET [ ${subnetName} ] deploying... "
-                $nsg = Get-AzNetworkSecurityGroup -Name $nsgNames[$subnet_num] -resourceGroup $nsgResourceGroups[$subnet_num]
+                $nsg = Get-AzNetworkSecurityGroup -Name $nsgNames[$subnet_num] -resourceGroup $nsgResourceGroups[$subnet_num] -ErrorAction SilentlyContinue
                 Add-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet `
                 -AddressPrefix $subnetRanges[$subnet_num] -NetworkSecurityGroupId $nsg.Id | set-AzVirtualNetwork -AsJob | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
                     Write-Host -Object "| -- Error -- some jobs failed as follows:" -ForegroundColor "Red" ; (Get-Job -State Failed).Error 
                     Get-Job | Remove-Job | Out-Null
-                    break ; Write-Host -Object "|"
+                    Write-Host -Object "|" ;break
                 }
             } else {
-                break ; Write-Host -Object "|"
+                Write-Host -Object "|" ; break
             }
             Get-Job | Remove-Job | Out-Null
             Write-Host -Object "| SUBNET ResourceID: "
