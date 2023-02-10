@@ -8,18 +8,17 @@ function add_NetworkInterface {
         $subnetNames = $line.subnetNames.Split(";")
         $privateIpAddresses = $line.ipAddress.Split(";")
 
-        #loop
         $nic_num = 0
         foreach ($IpAddress in $privateIpAddresses) {
             if(!($IpAddress)){ break }
-
+            # Function call. Create resource group if it does not exist.
             add_ResourceGroup $vmResourceGroup $location
 
             # Check if VM_NIC exist.
             $nicSuffix = $nic_num + 1
             $nic = Get-AzNetworkInterface -Name "${nicPrefix}-NIC${nicSuffix}" -ResourceGroup $vmResourceGroup -ErrorAction SilentlyContinue
             if (!($nic)) { 
-                Write-Host -Object "| -- Azure_Virtual_Machines [ $nicPrefix ] --"
+                Write-Host -Object "| Azure_Virtual_Machines_NIC [ $nicPrefix ] "
                 Write-Host -Object "|"
                 Write-Host -Object "| NIC [ ${nicPrefix}-NIC${nicSuffix} ] deploying..."
                 try {
@@ -39,11 +38,14 @@ function add_NetworkInterface {
                     Get-Job | Remove-Job | Out-Null
                     break
                 }
+                Write-Host -Object "| NIC ResourceID: "
+                Write-Host "|"(Get-AzNetworkInterface -Name "${nicPrefix}-NIC${nicSuffix}" -ResourceGroup $vmResourceGroup).Id
+                Write-Host -Object "| - - - - -"
+                Get-Job | Remove-Job | Out-Null
+            } else {
+                Write-Host -Object "| NIC [ ${nicPrefix}-NIC${nicSuffix} ] already exists." -ForegroundColor "Yellow"
+                Write-Host -Object "| - - - - -"
             }
-            Write-Host -Object "| NIC ResourceID: "
-            Write-Host "|"(Get-AzNetworkInterface -Name "${nicPrefix}-NIC${nicSuffix}" -ResourceGroup $vmResourceGroup).Id
-            Write-Host -Object "|"
-            Get-Job | Remove-Job | Out-Null
             $nic_num ++
         }
     }

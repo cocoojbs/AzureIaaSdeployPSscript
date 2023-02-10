@@ -9,13 +9,13 @@ function add_NSG {
             if(!($nsgName)){ break }
             $nsg_rg = $nsgResourceGroup[$nsg_num]
 
-            add_ResourceGroup $nsg_rg $location
-
             $nsg = Get-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg -ErrorAction SilentlyContinue
             if (!($nsg)) {
-                Write-Host -Object "| -- Azure_Network_Security_Group [ ${nsgName} ] --"
+                # Function call. Create resource group if it does not exist.
+                add_ResourceGroup $nsg_rg $location
+                Write-Host -Object "| Azure_Network_Security_Group [ ${nsgName} ]"
                 Write-Host -Object "|"
-                Write-Host -Object "| NSG [ ${nsgName}] ] deploying..."
+                Write-Host -Object "| NSG [ ${nsgName}] deploying..."
                 New-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg -Location $Location -AsJob -Force | Out-Null
                 Get-Job | Wait-Job | Out-Null
                 if (Get-Job -State Failed) {
@@ -27,9 +27,11 @@ function add_NSG {
                 Write-Host -Object "|"
                 Write-Host -Object "| NSG_ID: "
                 Write-Host "|"(Get-AzNetworkSecurityGroup -Name $nsgName -resourceGroup $nsg_rg).Id
+                } else {
+                    Write-Host -Object "| NSG [ ${nsgName}] already exists." -ForegroundColor "Yellow"
                 }
-            Write-Host -Object "|"
             $nsg_num ++ ; Start-Sleep 1
+            Write-Host -Object "| - - - - -"
         }
     }
     Write-Host -Object "| function add_NSG completed."

@@ -1,4 +1,4 @@
-function add_NetworkSecurityRule {
+function add_NsgRule {
     foreach ($line in $nsg_csv) {
         $nsg_name = $line.nsgName
         $nsg_resourceGroup = $line.nsgResourceGroup
@@ -15,8 +15,8 @@ function add_NetworkSecurityRule {
         if (!($description)) { $description = "-" }
 
         # Check if NSG_RULE exist.
-        Write-Host -Object "| -- Azure_Network_Security_Group [ $nsg_name ] --"
         Write-Host -Object "|"
+        Write-Host -Object "| Azure_Network_Security_Group [ $nsg_name ]"
         $nsg = Get-AzNetworkSecurityGroup -Name $nsg_name -ResourceGroupName $nsg_resourceGroup -ErrorAction SilentlyContinue
         if (!($nsg)) {
             Write-Host -Object "| -- Error -- NSG [ ${nsg_name} ] not found." -ForegroundColor "Red"
@@ -42,13 +42,15 @@ function add_NetworkSecurityRule {
                 break ; Write-Host -Object "|"
             }
             Get-Job | Remove-Job | Out-Null
+            Write-Host -Object "| Rule [ ${rule_name} ]: "
+            $nsg = Get-AzNetworkSecurityGroup -Name $nsg_name -ResourceGroupName $nsg_resourceGroup
+            Get-AzNetworkSecurityRuleConfig -Name $rule_name -NetworkSecurityGroup $nsg | Select-Object `
+            Name,Direction,Access,Priority,Protocol,DestinationPortRange,SourceAddressPrefix,DestinationAddressPrefix
+            Write-Host -Object "|"
+            Start-Sleep 1
+        } else {
+            Write-Host -Object "| Rule [ ${rule_name} ] already exists." -ForegroundColor "Yellow"
         }
-        Write-Host -Object "| Rule [ ${rule_name} ]: "
-        $nsg = Get-AzNetworkSecurityGroup -Name $nsg_name -ResourceGroupName $nsg_resourceGroup
-        Get-AzNetworkSecurityRuleConfig -Name $rule_name -NetworkSecurityGroup $nsg | Select-Object `
-        Name,Direction,Access,Priority,Protocol,DestinationPortRange,SourceAddressPrefix,DestinationAddressPrefix
-        Write-Host -Object "|"
-        Start-Sleep 1
     }
     Write-Host -Object "| function add_NetworkSecurityRule completed."
     Write-Host -Object "|"

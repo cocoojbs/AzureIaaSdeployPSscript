@@ -25,9 +25,8 @@ function add_VM {
         $azVM = Get-AzVM -Name $vmName -resourceGroup $resourceGroup -ErrorAction SilentlyContinue
         if ($azVM) {
             Write-Host -Object "| Virtual_Machines [ $vmName ] already exists." -ForegroundColor "Yellow"
-            break
         } else {
-            Write-Host -Object "| -- Azure_Virtual_Machines [ $vmName ] --"
+            Write-Host -Object "| Azure_Virtual_Machines [ $vmName ]"
             Write-Host -Object "|"
     
             # AvailabilitySet settings
@@ -113,7 +112,7 @@ function add_VM {
                 $osType
                 $publisherName
                 $offer + $sku
-                $confirm = Confirmation -command pwd
+                $confirm = Confirm_YesNo -command pwd
                 if ($confirm[2] -eq "|") {
                     "|"; "| Canceled."; "|"; break
                 } else {
@@ -184,6 +183,7 @@ function add_VM {
             Write-Host "|"(Get-AzVM -Name $vmName -resourceGroup $resourceGroup).id
             Write-Host -Object "|"
         }
+        Write-Host -Object "| - - - - -"
         Start-Sleep 1
     }
     Write-Host -Object "| function add_VM completed."

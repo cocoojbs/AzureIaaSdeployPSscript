@@ -8,7 +8,9 @@ $backup_paramFile = ".\csv\backup_parameter.csv"
 $availability_paramFile = ".\csv\availability_parameter.csv"
 $list_file = ".\os.list"
 
-# initialize
+# initialize and displya subscription name
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
 try {
     $Error.Clear()
     Get-Variable *Obj | Remove-Variable -ErrorAction SilentlyContinue
@@ -18,9 +20,10 @@ try {
     exit
 }
 
-# log
+# start of logging
 $timeStamp = Get-Date -Format "yyyy-MM-dd_HHmm"
 Start-Transcript -Path ".\log\${timeStamp}.log"
+Write-Host -Object "| - - - - - - - - - - - - - -"
 Write-Host -Object " Subscription:"
 (Get-AzContext).Name
 Write-Host -Object "|"
@@ -28,14 +31,14 @@ Write-Host -Object "|"
 # Load Functions
 Set-Location -Path (Split-Path -Parent $MyInvocation.MyCommand.Path)
 try {
-    . .\func\check_cmdlt.ps1
-    . .\func\Confirmation.ps1
+    . .\func\check_Cmdlt.ps1
+    . .\func\Confirm_YesNo.ps1
     . .\func\add_ResourceGroup.ps1
     . .\func\add_VirtualNetwork.ps1
     . .\func\add_NSG.ps1
     . .\func\add_Subnet.ps1
     . .\func\add_NetworkInterface.ps1
-    . .\func\add_NetworkSecurityRule.ps1
+    . .\func\add_NsgRule.ps1
     . .\func\add_VM.ps1
     . .\func\add_StorageAccount.ps1
     . .\func\add_AzRecoveryServicesVault.ps1
@@ -47,7 +50,8 @@ try {
     exit
 }
 
-check_cmdlt
+# Function call.Check for the existence of Az modules to be used in the script.
+check_Cmdlt
 
 # Load CSVs
 try {
@@ -73,24 +77,43 @@ Write-Host -Object "|  VirtualNetwork"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 $nw_paramFile
 $nw_csv = Import-Csv -Path $nw_paramFile
-$nw_csv | select-Object vNet_name,vNet_resourceGroup,location,range | format-table
-Confirmation add_VirtualNetwork
+$nw_csv | select-Object vNet_name,vNet_resourceGroup,location,ranges | format-table
+Confirm_YesNo add_VirtualNetwork
 
 Write-Host -Object "|"
 Write-Host -Object "|"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 Write-Host -Object "|  NSG"
 Write-Host -Object "| - - - - - - - - - - - - - -"
-$nw_csv | select-Object vNet_name,vNet_resourceGroup,subnetNames,NSG_names,NSG_ResourceGroups | format-table
-Confirmation add_NSG
+$nw_csv | select-Object NSG_names,NSG_ResourceGroups,subnetNames,vNet_name | format-table
+Confirm_YesNo add_NSG
+
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|  NsgRule"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+$nsg_paramFile
+$nsg_csv = Import-Csv -Path $nsg_paramFile
+$nsg_csv | format-table
+Confirm_YesNo add_NsgRule
 
 Write-Host -Object "|"
 Write-Host -Object "|"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 Write-Host -Object "|  Subnet"
 Write-Host -Object "| - - - - - - - - - - - - - -"
-$nw_csv | select-Object vNet_name,vNet_resourceGroup,subnetNames,subnetRanges,NSG_names | format-table
-Confirmation add_Subnet
+$nw_csv | select-Object vNet_name,subnetNames,subnetRanges,NSG_names | format-table
+Confirm_YesNo add_Subnet
+
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|  VM_NIC"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+$nw_paramFile
+$nw_csv | select-Object vm_name,ipAddress,vNet_name,subnetNames | format-table 
+Confirm_YesNo add_NetworkInterface
 
 Write-Host -Object "|"
 Write-Host -Object "|"
@@ -100,26 +123,7 @@ Write-Host -Object "| - - - - - - - - - - - - - -"
 $availability_paramFile
 $availability_csv = Import-Csv -Path $availability_paramFile
 $availability_csv | format-table 
-Confirmation add_AvailabilitySet
-
-Write-Host -Object "|"
-Write-Host -Object "|"
-Write-Host -Object "| - - - - - - - - - - - - - -"
-Write-Host -Object "|  NetworkSecurityRule"
-Write-Host -Object "| - - - - - - - - - - - - - -"
-$nsg_paramFile
-$nsg_csv = Import-Csv -Path $nsg_paramFile
-$nsg_csv | format-table
-Confirmation add_NetworkSecurityRule
-
-Write-Host -Object "|"
-Write-Host -Object "|"
-Write-Host -Object "| - - - - - - - - - - - - - -"
-Write-Host -Object "|  VM_NIC"
-Write-Host -Object "| - - - - - - - - - - - - - -"
-$nw_paramFile
-$nw_csv | select-Object vm_name,vNet_name,subnetNames,subnetRanges,ipAddress | format-table 
-Confirmation add_NetworkInterface
+Confirm_YesNo add_AvailabilitySet
 
 Write-Host -Object "|"
 Write-Host -Object "|"
@@ -128,8 +132,8 @@ Write-Host -Object "|  VM"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 $vm_paramFile
 $vm_csv = Import-Csv -Path $vm_paramFile
-$vm_csv | select-Object vm_name,vm_resourceGroup,vm_size,vmOsDisk_type,vmOsDisk_size,vmDataDisks_type,vmDataDisks_size,ImageName | format-table
-Confirmation add_VM
+$vm_csv | select-Object vm_name,vm_resourceGroup,vm_size,vmOsDisk_size,ImageName | format-table
+Confirm_YesNo add_VM
 
 Write-Host -Object "|"
 Write-Host -Object "|"
@@ -138,8 +142,8 @@ Write-Host -Object "|  StorageAccount"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 $storage_paramFile
 $storage_csv = Import-Csv -Path $storage_paramFile
-$storage_csv | format-table
-Confirmation add_StorageAccount
+$storage_csv | select-Object storageName,storageResourceGroup,bootdiag_vmNames,flowlog_nsgs | format-table
+Confirm_YesNo add_StorageAccount
 
 Write-Host -Object "|"
 Write-Host -Object "|"
@@ -148,11 +152,13 @@ Write-Host -Object "|  VM_Backup"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 $backup_paramFile
 $backup_csv = Import-Csv -Path $backup_paramFile
-$backup_csv | format-table
-Confirmation add_AzRecoveryServicesVault
+$backup_csv | select-Object RecoveryServicesName,RecoveryServicesRg,policyName,scheduleRunFrequency| format-table
+Confirm_YesNo add_AzRecoveryServicesVault
 
 Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "| deploy_AzVm.ps1 completed. "
+Write-Host -Object "| - - - - - - - - - - - - - -"
 Write-Host -Object "|"
-Write-Host -Object "| COMPLETE. "
-Write-Host -Object "|"
+Remove-Variable * -Exclude $rc* -ErrorAction SilentlyContinue
 stop-Transcript

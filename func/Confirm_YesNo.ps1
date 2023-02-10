@@ -1,7 +1,7 @@
-function Confirmation {
+function Confirm_YesNo {
     param($command)
-    $title = " Confirm (y/n)"
-    $message = " Are you sure you want to deploy new Azure resource with this parameter ? "
+    $title = "| Confirm (y/n)"
+    $message = "| Are you sure you want to deploy new Azure resource with this parameter ? "
     $tChoiceDescription = "System.Management.Automation.Host.ChoiceDescription"
     
     $options = @(

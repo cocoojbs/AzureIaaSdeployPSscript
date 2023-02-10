@@ -32,7 +32,7 @@ function add_AzRecoveryServicesVault {
 
         $rsc = Get-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg -ErrorAction SilentlyContinue
         if(!($rsc)) {
-            Write-Host -Object "| -- Azure_Backup [ ${rsc_name} ] --"
+            Write-Host -Object "| Azure_Backup [ ${rsc_name} ] "
             Write-Host -Object "|"
                 Write-Host -Object "| RecoveryServicesVault [ ${rsc_name} ] deploying..."
             New-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg -Location $AzVM.Location
@@ -154,7 +154,7 @@ function add_AzRecoveryServicesVault {
             }
         }    
         Write-Host -Object "| VM [ ${vm_name} ] Backup Settings Enabled."
-        Write-Host -Object "|"
+        Write-Host -Object "| - - - - -"
         Start-Sleep 1
     }
     Write-Host -Object "| function add_AzRecoveryServicesVault complete."

@@ -16,7 +16,7 @@ function add_StorageAccount {
             $vm_num = 0
             foreach ($vmName in $vmNames) {
                 if(!($vmName)){ break }
-                Write-Host -Object "| -- Set-AzVMBootDiagnostic [ ${vmName} ] with Managed Storage Account --"
+                Write-Host -Object "| Set-AzVMBootDiagnostic [ ${vmName} ] with Managed Storage Account"
                 Write-Host -Object "|"
                 $vm = Get-AzVM -Name $vmName -resourceGroup $vmRGs[$vm_num] -ErrorAction SilentlyContinue
                 if (!($vm)) {
@@ -36,12 +36,13 @@ function add_StorageAccount {
                 (Get-AzVM -Name $vmName -resourceGroup $vmRGs[$vm_num]).DiagnosticsProfile.BootDiagnostics
                 Write-Host -Object "|"
                 $vm_num ++ ; Start-Sleep 1
+                Write-Host -Object "| - - - - -"
             }
         } else {
+            # Function call. Create resource group if it does not exist.
             add_ResourceGroup $storageResourceGroup $location
 
             $storage = Get-AzStorageAccount -AccountName $storageAccount -ResourceGroup $storageResourceGroup -ErrorAction SilentlyContinue
-
             # Check if STORAGEACCOUNT exist.
             if (!($storage)) {
                 $fqdn = "https://" + $storageAccount + ".blob.core.windows.net"
@@ -52,7 +53,7 @@ function add_StorageAccount {
                         break ; Write-Host -Object "|"
                     }
                 } catch {
-                    Write-Host -Object "| -- Azure_Storage_Account [ $storageAccount ] --"
+                    Write-Host -Object "| Azure_Storage_Account [ $storageAccount ]"
                     Write-Host -Object "|"
                     Write-Host -Object "| STORAGE [ ${storageAccount} ] deploying..."
                     New-AzStorageAccount -AccountName $storageAccount -resourceGroup $storageResourceGroup -Location $location -SkuName $sku -AsJob | Out-Null
@@ -76,7 +77,7 @@ function add_StorageAccount {
             $vm_num = 0
             foreach ($vmName in $vmNames) {
                 if(!($vmName)){ break }
-                Write-Host -Object "| -- Set-AzVMBootDiagnostic [ ${vmName} ] with Custom Storage Account --"
+                Write-Host -Object "| Set-AzVMBootDiagnostic [ ${vmName} ] with Custom Storage Account"
                 Write-Host -Object "|"
                 $vm = Get-AzVM -Name $vmName -resourceGroup $vmRGs[$vm_num] -ErrorAction SilentlyContinue
                 if (!($vm)) {
@@ -104,7 +105,7 @@ function add_StorageAccount {
         foreach ($nsgName in $nsgNames) {
             if(!($nsgName)){ break }
             # Check if NSG exist.
-            Write-Host -Object "| -- Set-AzNetworkWatcherConfigFlowLog [${nsgName}] --"
+            Write-Host -Object "| Set-AzNetworkWatcherConfigFlowLog [${nsgName}]"
             Write-Host -Object "|"
             $nsg = Get-AzNetworkSecurityGroup -Name $nsgName -ResourceGroupName $nsgRGs[$nsg_num] -ErrorAction SilentlyContinue
             if (!($nsg)) {
@@ -130,6 +131,7 @@ function add_StorageAccount {
             $nsg_num ++ ; Start-Sleep 1
         }
         Start-Sleep 1
+        Write-Host -Object "| - - - - -"
     }
     Write-Host -Object "| function add_StorageAccount completed."
     Write-Host -Object "|"
