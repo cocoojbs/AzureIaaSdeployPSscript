@@ -6,7 +6,19 @@ function add_AvailabilitySet {
         $updateDomain = $line.UpdateDomain
         $faultDomain = $line.FaultDomain
         $ppgName = $line.ProximityPlacementGroup
+        <#
+            .SYNOPSIS
+            Deploy New availabilitySet and a ProximityPlacementGroup.
 
+            .DESCRIPTION
+            This function creates New AvailabilitySet and a ProximityPlacementGroup.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
         # Check if VM_RESOURCEGROUP exists.
         if ($ppgName) {
             $ppg = Get-AzProximityPlacementGroup -Name $ppgName -ResourceGroupName $rgName -ErrorAction SilentlyContinue

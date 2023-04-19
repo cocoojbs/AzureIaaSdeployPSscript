@@ -19,6 +19,19 @@ function add_AzRecoveryServicesVault {
         $weekly = $param.weeklySchedule
         $timezone = $param.timeZone
         $Redundancy = $param.Redundancy
+        <#
+            .SYNOPSIS
+            Deploy New RecoveryServicesVault and a VM Backup Policy.
+
+            .DESCRIPTION
+            This function creates New RecoveryServicesVault and a VM Backup Policy.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
 
         if(!($rsc_name)) { break }
 

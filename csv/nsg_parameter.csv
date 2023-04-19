@@ -1,11 +1,1 @@
 ﻿nsgName,nsgResourceGroup,ruleName,access,protocol,direction,priority,sourceAddresses,sourcePorts,destAddresses,destPorts,description
-nsg01,sample-rg01,Allow80_443VNET-in,Allow,TCP,inbound,1000,VirtualNetwork,*,VirtualNetwork,80;443,
-nsg01,sample-rg01,AllowALB-in,Allow,TCP,inbound,2000,AzureLoadBalancer,*,*,*,
-nsg01,sample-rg01,DenyALL-in,Deny,*,inbound,4096,*,*,*,*,
-nsg02,sample-rg01,Allow53google-out,Allow,UDP,outbound,1000,VirtualNetwork,*,8.8.8.8,53,
-nsg02,sample-rg01,DenyInternet-out,Deny,*,outbound,4000,VirtualNetwork,*,Internet,*,
-nsg03,sample-rg01,AllowSUBNET-in,Allow,*,inbound,1000,10.0.0.0/26;10.0.0.128/26,*,10.0.0.64/26,*,
-nsg03,sample-rg01,AllowALB-in,Allow,TCP,inbound,2000,AzureLoadBalancer,*,*,*,
-nsg03,sample-rg01,DenyALL-in,Deny,*,inbound,4096,*,*,*,*,
-nsg03,sample-rg01,AllowSUBNET-out,Allow,*,outbound,1000,10.0.0.64/26,*,10.0.0.0/26;10.0.0.128/26,*,
-nsg03,sample-rg01,DenyALL-out,Deny,*,outbound,4096,*,*,*,*,

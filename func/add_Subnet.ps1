@@ -6,6 +6,19 @@ function add_Subnet {
         $subnetRanges = $line.subnetRanges.Split(";")
         $nsgNames = $line.NSG_names.Split(";")
         $nsgResourceGroups = $line.NSG_resourceGroups.Split(";")
+        <#
+            .SYNOPSIS
+            Set New VirtualNetwork Subnet.
+
+            .DESCRIPTION
+            This function creates New Subnet in VirtualNetwork.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
 
         $subnet_num = 0
         foreach ($subnetName in $subnetNames) {
@@ -34,7 +47,7 @@ function add_Subnet {
                     Write-Host -Object "|" ; break
                 }
             } else {
-                Write-Host -Object "| SUBNET [ ${subnetName} ] already exists." -ForegroundColor "Yellow" ; break
+                Write-Host -Object "| SUBNET [ ${subnetName} ] already exists." -ForegroundColor "Yellow" #; break
             }
             Get-Job | Remove-Job | Out-Null
             Write-Host -Object "| SUBNET ResourceID: "

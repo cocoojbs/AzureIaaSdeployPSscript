@@ -1,6 +1,19 @@
 function add_VirtualNetwork {
     foreach ($line in $nw_csv) {
         $vnetName = $line.vNet_name
+        <#
+            .SYNOPSIS
+            Deploy New VirtualNetwork.
+
+            .DESCRIPTION
+            This function creates New VirtualNetwork.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
         $exists = Get-AzVirtualNetwork -Name $vnetName -ResourceGroup $line.vNet_resourceGroup -ErrorAction SilentlyContinue
         if (!($exists)) {
             # Function call. Create resource group if it does not exist.

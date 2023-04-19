@@ -21,6 +21,19 @@ function add_VM {
         $imageResourceGroup = $line.ImageResourceGroup
         $availabilitysetName = $line.AvailabilitySet
         $proximityPlacementGroupName = $line.ProximityPlacementGroup
+        <#
+            .SYNOPSIS
+            Deploy New VM.
+
+            .DESCRIPTION
+            This function creates New VM from MarketPlace or Custom image.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
 
         $azVM = Get-AzVM -Name $vmName -resourceGroup $resourceGroup -ErrorAction SilentlyContinue
         if ($azVM) {
@@ -109,6 +122,7 @@ function add_VM {
 
                 # Confirm input Infomation
                 Write-Host -Object "| VM [ $vmName ]'s OS Version infomation as follows."
+                Write-Host -Object "| - - - - -"
                 $osType
                 $publisherName
                 $offer + $sku

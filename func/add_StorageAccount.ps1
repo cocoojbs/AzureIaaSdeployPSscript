@@ -9,6 +9,19 @@ function add_StorageAccount {
         $nsgNames = $line.flowlog_nsgs.Split(";")
         $nsgRGs = $line.nsgResourceGroups.Split(";")
         $retentions = $line.RetentionInDays.Split(";")
+        <#
+            .SYNOPSIS
+            Deploy New StorageAccount.
+
+            .DESCRIPTION
+            This function creates New StorageAccount, Set VM BootDiag and NSG FlowLog.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
         if (!($storageAccount)) { $storageAccount = "-" }
 
         # VM BOOT DIAGNOSTICS with Managed Storage Account

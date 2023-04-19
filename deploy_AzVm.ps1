@@ -1,16 +1,30 @@
-## Deploy New Virtual Machines from csv parameters
-# parameter Files path
+<#
+ .SYNOPSIS
+  Deploy New Virtual Machines from csv parameters.
+
+ .DESCRIPTION
+  The deploy_AzVm.ps1 script executes ps1 in the func folder to create Azure resources.  
+
+ .PARAMETER csv files
+  No arguments are required, just browse in the csv folder to determine the parameters.
+
+  .EXAMPLE
+  PS> .\deploy_AzVm.ps1
+#>
+# csv parameter Files path
 $vm_paramFile = ".\csv\vm_parameter.csv"
 $nw_paramFile = ".\csv\nw_parameter.csv"
 $nsg_paramFile = ".\csv\nsg_parameter.csv"    
 $storage_paramFile = ".\csv\storage_parameter.csv"    
 $backup_paramFile = ".\csv\backup_parameter.csv"    
 $availability_paramFile = ".\csv\availability_parameter.csv"
+$tag_paramFile = ".\csv\tag_parameter.csv"
 $list_file = ".\os.list"
 
-# initialize and displya subscription name
+# initialize and display subscription name
 Write-Host -Object "|"
 Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|"
 try {
     $Error.Clear()
     Get-Variable *Obj | Remove-Variable -ErrorAction SilentlyContinue
@@ -23,7 +37,9 @@ try {
 # start of logging
 $timeStamp = Get-Date -Format "yyyy-MM-dd_HHmm"
 Start-Transcript -Path ".\log\${timeStamp}.log"
+Write-Host -Object "|"
 Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|"
 Write-Host -Object " Subscription:"
 (Get-AzContext).Name
 Write-Host -Object "|"
@@ -43,6 +59,7 @@ try {
     . .\func\add_StorageAccount.ps1
     . .\func\add_AzRecoveryServicesVault.ps1
     . .\func\add_AvailabilitySet.ps1
+    . .\func\add_Tag.ps1
 } catch {
     Write-Host "| -- ERROR -- Loading function Files failed." -ForegroundColor Red
     Remove-Variable * -Exclude $rc* -ErrorAction SilentlyContinue
@@ -50,8 +67,12 @@ try {
     exit
 }
 
-# Function call.Check for the existence of Az modules to be used in the script.
-check_Cmdlt
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "| Check for the existence of Az modules."
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Confirm_YesNo check_Cmdlt
 
 # Load CSVs
 try {
@@ -61,6 +82,7 @@ try {
     Test-Path -Path $storage_paramFile | Out-Null
     Test-Path -Path $backup_paramFile | Out-Null
     Test-Path -Path $availability_paramFile | Out-Null
+    Test-Path -Path $tag_paramFile | Out-Null
     Test-Path -Path $list_file | Out-Null
 } catch {
     Write-Host "| -- ERROR -- Loading parameter Files failed." -ForegroundColor Red
@@ -156,8 +178,19 @@ $backup_csv | select-Object RecoveryServicesName,RecoveryServicesRg,policyName,s
 Confirm_YesNo add_AzRecoveryServicesVault
 
 Write-Host -Object "|"
+Write-Host -Object "|"
 Write-Host -Object "| - - - - - - - - - - - - - -"
-Write-Host -Object "| deploy_AzVm.ps1 completed. "
+Write-Host -Object "|  Tag"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+$tag_paramFile
+$tag_csv = Import-Csv -Path $tag_paramFile
+$tag_csv | format-table
+Confirm_YesNo add_Tag
+
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "| deploy_AzVm.ps1 Complete. "
 Write-Host -Object "| - - - - - - - - - - - - - -"
 Write-Host -Object "|"
 Remove-Variable * -Exclude $rc* -ErrorAction SilentlyContinue

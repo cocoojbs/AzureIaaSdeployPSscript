@@ -13,6 +13,19 @@ function add_NsgRule {
         $destPort = $line.destPorts.Split(";")
         $description = $line.description
         if (!($description)) { $description = "-" }
+        <#
+            .SYNOPSIS
+            Set New NSG Rule.
+
+            .DESCRIPTION
+            This function creates New NSG Rule.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
 
         # Check if NSG_RULE exist.
         Write-Host -Object "|"

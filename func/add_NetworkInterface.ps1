@@ -7,6 +7,19 @@ function add_NetworkInterface {
         $location = $line.location
         $subnetNames = $line.subnetNames.Split(";")
         $privateIpAddresses = $line.ipAddress.Split(";")
+        <#
+            .SYNOPSIS
+            Deploy New VM NIC.
+
+            .DESCRIPTION
+            This function creates New VM NIC.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
 
         $nic_num = 0
         foreach ($IpAddress in $privateIpAddresses) {
@@ -18,6 +31,7 @@ function add_NetworkInterface {
             $nicSuffix = $nic_num + 1
             $nic = Get-AzNetworkInterface -Name "${nicPrefix}-NIC${nicSuffix}" -ResourceGroup $vmResourceGroup -ErrorAction SilentlyContinue
             if (!($nic)) { 
+                Write-Host -Object "| - - - - -"
                 Write-Host -Object "| Azure_Virtual_Machines_NIC [ $nicPrefix ] "
                 Write-Host -Object "|"
                 Write-Host -Object "| NIC [ ${nicPrefix}-NIC${nicSuffix} ] deploying..."
@@ -40,11 +54,9 @@ function add_NetworkInterface {
                 }
                 Write-Host -Object "| NIC ResourceID: "
                 Write-Host "|"(Get-AzNetworkInterface -Name "${nicPrefix}-NIC${nicSuffix}" -ResourceGroup $vmResourceGroup).Id
-                Write-Host -Object "| - - - - -"
                 Get-Job | Remove-Job | Out-Null
             } else {
                 Write-Host -Object "| NIC [ ${nicPrefix}-NIC${nicSuffix} ] already exists." -ForegroundColor "Yellow"
-                Write-Host -Object "| - - - - -"
             }
             $nic_num ++
         }

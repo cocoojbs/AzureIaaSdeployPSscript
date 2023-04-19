@@ -3,6 +3,19 @@ function add_NSG {
         $location = $line.location
         $nsgNames = $line.NSG_names.Split(";")
         $nsgResourceGroup = $line.NSG_resourceGroups.Split(";")
+        <#
+            .SYNOPSIS
+            Deploy New NSG.
+
+            .DESCRIPTION
+            This function creates New NSG.
+
+            .PARAMETER
+            This function uses CSV parameters loaded in deploy_AzVm.ps1.
+
+            .EXAMPLE
+            NONE. This function is called in "deploy_AzVm.ps1
+        #>
 
         $nsg_num = 0
         foreach ($nsgName in $nsgNames) {
