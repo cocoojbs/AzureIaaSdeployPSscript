@@ -31,7 +31,6 @@ function add_NetworkInterface {
             $nicSuffix = $nic_num + 1
             $nic = Get-AzNetworkInterface -Name "${nicPrefix}-NIC${nicSuffix}" -ResourceGroup $vmResourceGroup -ErrorAction SilentlyContinue
             if (!($nic)) { 
-                Write-Host -Object "| - - - - -"
                 Write-Host -Object "| Azure_Virtual_Machines_NIC [ $nicPrefix ] "
                 Write-Host -Object "|"
                 Write-Host -Object "| NIC [ ${nicPrefix}-NIC${nicSuffix} ] deploying..."
@@ -41,7 +40,7 @@ function add_NetworkInterface {
                 }
                 catch{
                     $subname = $subnetNames[$nic_num]
-                    Write-Host -Object "| -- Error -- SUBNET [ ${vnetName}-${subname} ] not found." -ForegroundColor "Red"
+                    Write-Host -Object "| -- Error --  SUBNET [ ${vnetName}-${subname} ] not found." -ForegroundColor "Red"
                     break
                 }
                 $ipConfig = New-AzNetworkInterfaceIpConfig -Name "ipconfig1" -PrivateIpAddressVersion "IPv4" -PrivateIpAddress $privateIpAddresses[$nic_num] -SubnetId $subnet.Id
@@ -59,6 +58,7 @@ function add_NetworkInterface {
                 Write-Host -Object "| NIC [ ${nicPrefix}-NIC${nicSuffix} ] already exists." -ForegroundColor "Yellow"
             }
             $nic_num ++
+            Write-Host -Object "| - - - - -"
         }
     }
     Write-Host -Object "| function add_NetworkInterface completed."

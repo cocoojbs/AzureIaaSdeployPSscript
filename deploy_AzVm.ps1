@@ -58,6 +58,8 @@ try {
     . .\func\add_VM.ps1
     . .\func\add_StorageAccount.ps1
     . .\func\add_AzRecoveryServicesVault.ps1
+    . .\func\add_BackupPolicy.ps1
+    . .\func\enable_BackupProtection.ps1
     . .\func\add_AvailabilitySet.ps1
     . .\func\add_Tag.ps1
 } catch {
@@ -72,6 +74,7 @@ Write-Host -Object "|"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 Write-Host -Object "| Check for the existence of Az modules."
 Write-Host -Object "| - - - - - - - - - - - - - -"
+Get-Content .\cmdlt.list
 Confirm_YesNo check_Cmdlt
 
 # Load CSVs
@@ -117,7 +120,7 @@ Write-Host -Object "|  NsgRule"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 $nsg_paramFile
 $nsg_csv = Import-Csv -Path $nsg_paramFile
-$nsg_csv | format-table
+$nsg_csv | select-Object nsgName,ruleName,access,direction,sourceAddresses,destAddresses,destPorts | format-table
 Confirm_YesNo add_NsgRule
 
 Write-Host -Object "|"
@@ -170,12 +173,32 @@ Confirm_YesNo add_StorageAccount
 Write-Host -Object "|"
 Write-Host -Object "|"
 Write-Host -Object "| - - - - - - - - - - - - - -"
-Write-Host -Object "|  VM_Backup"
+Write-Host -Object "|  RecoveryServicesVault"
 Write-Host -Object "| - - - - - - - - - - - - - -"
 $backup_paramFile
 $backup_csv = Import-Csv -Path $backup_paramFile
-$backup_csv | select-Object RecoveryServicesName,RecoveryServicesRg,policyName,scheduleRunFrequency| format-table
+$backup_csv | select-Object vmName,vmRg,RecoveryServicesName,RecoveryServicesRg| format-table
 Confirm_YesNo add_AzRecoveryServicesVault
+
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|  BackupPolicy"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+$backup_paramFile
+$backup_csv = Import-Csv -Path $backup_paramFile
+$backup_csv | select-Object RecoveryServicesName,policyName,scheduleRunFrequency,Redundancy| format-table
+Confirm_YesNo add_BackupPolicy
+
+Write-Host -Object "|"
+Write-Host -Object "|"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+Write-Host -Object "|  EnableBackupProtection"
+Write-Host -Object "| - - - - - - - - - - - - - -"
+$backup_paramFile
+$backup_csv = Import-Csv -Path $backup_paramFile
+$backup_csv | select-Object vmName,RecoveryServicesName,policyName| format-table
+Confirm_YesNo enable_BackupProtection
 
 Write-Host -Object "|"
 Write-Host -Object "|"
