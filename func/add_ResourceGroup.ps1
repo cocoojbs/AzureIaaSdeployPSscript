@@ -19,8 +19,8 @@ function add_ResourceGroup ($rg_name, $rg_location){
             Write-Host -Object "|"
             Write-Host -Object "| RESOURCEGROUP_ID: "
             Write-Host "| "(Get-AzResourceGroup -Name $rg_name).ResourceId
+            Write-Host -Object "| - - - - -"
         }
-    Write-Host -Object "| - - - - -"
     Write-Host -Object "|"
 }
 

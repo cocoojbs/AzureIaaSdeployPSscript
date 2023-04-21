@@ -37,7 +37,7 @@ function add_AzRecoveryServicesVault {
 
         $AzVM = Get-AzVM -Name $vm_name -ResourceGroupName $vm_rg -ErrorAction SilentlyContinue
         if(!($AzVM)) {
-            Write-Host -Object "| -- Error -- VM [ ${vm_name} ] not found." -ForegroundColor Red
+            Write-Host -Object "| -- Error --  VM [ ${vm_name} ] not found." -ForegroundColor Red
             break ; Write-Host -Object "|"
         }
 
@@ -55,7 +55,7 @@ function add_AzRecoveryServicesVault {
         Write-Host -Object "|"
 
         # Get-AzRecoveryServicesBackupProtectionPolicy
-        Write-Host -Object "| -- Azure_Backup_BackupPolicy [ ${policy} ] in [ ${rsc_name} ] --"
+        Write-Host -Object "| --  Azure_Backup_BackupPolicy [ ${policy} ] in [ ${rsc_name} ] --"
         Write-Host -Object "|"
         $vault = Get-AzRecoveryServicesVault -Name $rsc_name -ResourceGroupName $rsc_rg
         $pol = Get-AzRecoveryServicesBackupProtectionPolicy -Name $policy -VaultId $vault.ID  -ErrorAction SilentlyContinue
@@ -90,7 +90,7 @@ function add_AzRecoveryServicesVault {
                 $Get_BackupPolicy_Config.parameters.retention.value.weeklySchedule.retentionTimes[0] = $JstTime
                 $Get_BackupPolicy_Config.parameters.retention.value.weeklySchedule.retentionDuration.count = [int]$count
             } else {
-                Write-Host -Object "| -- Error -- Invalid ScheduleRunFrequency. Choose [ Daily ] or [ Weekly ]." -ForegroundColor Red
+                Write-Host -Object "| -- Error --  Invalid ScheduleRunFrequency. Choose [ Daily ] or [ Weekly ]." -ForegroundColor Red
                 break ; Write-Host -Object "|"
             }
 
@@ -162,7 +162,7 @@ function add_AzRecoveryServicesVault {
                     break ; Write-Host -Object "|"
                 }
             } else {
-                    Write-Host -Object "| -- Error -- VM [ $VmName ] and [ $RscName ] must be in the same location." -ForegroundColor Red
+                    Write-Host -Object "| -- Error --  VM [ $VmName ] and [ $RscName ] must be in the same location." -ForegroundColor Red
                     break ; Write-Host -Object "|"
             }
         }    

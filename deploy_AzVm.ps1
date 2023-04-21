@@ -30,7 +30,7 @@ try {
     Get-Variable *Obj | Remove-Variable -ErrorAction SilentlyContinue
     (Get-AzSubscription).Name[0] | Out-Null
 } catch {
-    Write-Host "| -- ERROR -- Get-AzSubscription : Run Connect-AzAccount to login." -ForegroundColor Red
+    Write-Host "| -- ERROR --  Get-AzSubscription : Run Connect-AzAccount to login." -ForegroundColor Red
     exit
 }
 
@@ -61,7 +61,7 @@ try {
     . .\func\add_AvailabilitySet.ps1
     . .\func\add_Tag.ps1
 } catch {
-    Write-Host "| -- ERROR -- Loading function Files failed." -ForegroundColor Red
+    Write-Host "| -- ERROR --  Loading function Files failed." -ForegroundColor Red
     Remove-Variable * -Exclude $rc* -ErrorAction SilentlyContinue
     stop-Transcript
     exit
@@ -85,7 +85,7 @@ try {
     Test-Path -Path $tag_paramFile | Out-Null
     Test-Path -Path $list_file | Out-Null
 } catch {
-    Write-Host "| -- ERROR -- Loading parameter Files failed." -ForegroundColor Red
+    Write-Host "| -- ERROR --  Loading parameter Files failed." -ForegroundColor Red
     Remove-Variable * -Exclude $rc* -ErrorAction SilentlyContinue
     stop-Transcript
     exit

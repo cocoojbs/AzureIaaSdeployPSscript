@@ -39,8 +39,8 @@ function add_AvailabilitySet {
                 Write-Host -Object "| ProximityPlacementGroup ResourceID: "
                 (Get-AzProximityPlacementGroup -Name $ppgName -ResourceGroupName $rgName).Id
                 Write-Host -Object "|"
-                }
             }
+        }
 
         $aset = Get-AzAvailabilitySet -Name $asetName -ResourceGroupName $rgName -ErrorAction SilentlyContinue
         if (!($aset)) {
