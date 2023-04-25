@@ -16,10 +16,10 @@ function enable_BackupProtection {
         $Redundancy = $param.Redundancy
         <#
             .SYNOPSIS
-            Deploy New RecoveryServicesVault and a VM Backup Policy.
+            Enable VM Backup Protection.
 
             .DESCRIPTION
-            This function creates New RecoveryServicesVault and a VM Backup Policy.
+            This function Enable VM Backup Protection.
 
             .PARAMETER
             This function uses CSV parameters loaded in deploy_AzVm.ps1.
