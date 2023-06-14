@@ -31,7 +31,9 @@ function add_Subnet {
                 if ($nsgNames) {
                     $nsg = Get-AzNetworkSecurityGroup -Name $nsgNames[$subnet_num] -resourceGroup $nsgResourceGroups[$subnet_num] -ErrorAction SilentlyContinue
                     if (!($nsg)) {
-                        Write-Host -Object "| SUBNET [ ${subnetName} ]'s NSG not found." -ForegroundColor "Red" ; break
+                        Write-Host -Object "| SUBNET [ ${subnetName} ]'s NSG not found." -ForegroundColor "Red"
+                        Add-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet `
+                        -AddressPrefix $subnetRanges[$subnet_num] | set-AzVirtualNetwork -AsJob | Out-Null
                     } else {
                         Add-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet `
                         -AddressPrefix $subnetRanges[$subnet_num] -NetworkSecurityGroupId $nsg.Id | set-AzVirtualNetwork -AsJob | Out-Null    
